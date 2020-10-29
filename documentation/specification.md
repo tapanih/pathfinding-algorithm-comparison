@@ -4,14 +4,13 @@ Alkuhuomautus: Olen tietojenkäsittelytieteen kandiohjelmassa (TKT).
 
 ## Overview of the program
 
-The program compares and visualizes pathfinding algorithms on 2D grid maps from [Moving AI Labs](https://movingai.com/benchmarks/grids.html). Additionally, the scenario files will be used for testing. The scenarios assume that the maps are 8-connected with diagonal movement cost of sqrt(2). In the simplest version of the program, the name of the algorithm and the file name of a map are provided as command line arguments and the program shows the runtime of the algorithm along with an image of the map where the optimal path and visited nodes are colorized. Graphical UI, side-by-side comparisons and animations may be added if time permits. Code, comments and documentation will be written
-in English.
+The program compares and visualizes path-finding algorithms on 2D grid maps from [Moving AI Labs](https://movingai.com/benchmarks/grids.html). Additionally, the scenario files will be used for testing. The scenarios assume that the maps are 8-connected with diagonal movement cost of sqrt(2). In the simplest version of the program, the name of the algorithm and the file name of a map are provided as command line arguments and the program shows the runtime of the algorithm along with an image of the map where the optimal path and visited nodes are colorized. Graphical UI, side-by-side comparisons and animations may be added if time permits. Code, comments and documentation will be written in English.
 
 ## Algorithms
 
-### Djikstra's algorithm
+### Dijkstra's algorithm
 
-Since we are operating on an 8-connected grid maps, Djikstra's algorithm is the natural choice for handling the different cost of diagonal movement. This algorithm also sets a baseline that can be compared against more sophisticated path-finding algorithms. The time complexity of the algorithm is O(n log n) where n is the number of squares. The amount of edges is approximately 8n which simplifies the complexity from the usual O(n + m log n).
+Since we are operating on an 8-connected grid maps, Dijkstra's algorithm is the natural choice for handling the different cost of diagonal movement. This algorithm also sets a baseline that can be compared against more sophisticated path-finding algorithms. The time complexity of the algorithm is O(n log n) where n is the number of squares. The amount of edges is approximately 8n which simplifies the complexity from the usual O(n + m log n).
 
 The algorithm requires a priority queue which can be implemented in various ways but binary heap and fibonacci heap are the most promising options. Both may be implemented if time permits but first version will use a binary heap as it is simpler to code. The priority queue needs to implement insert, extract-min and decrease-key operations. The time complexities of these operations are shown in the table below:
 
@@ -26,8 +25,9 @@ The algorithm needs a hash map with insert and find-key operations to store visi
 
 ### A* Algorithm
 
-A* algorithm is an optimization of Djikstra's. The time and space complexity should similarly be O(n log n) but with larger constants due to the added heuristic function. 
-Like Djikstra's, A* algorithm also requires a priority queue and a hash map.
+A* algorithm is an optimization of Dijkstra's. The time and space complexity should similarly be O(n log n) but with larger constants due to the added heuristic function. 
+
+Like Dijkstra's algorithm, A*  also requires a priority queue and a hash map.
 
 ### Jump point search (JPS)
 
@@ -52,3 +52,5 @@ https://www.cs.au.dk/~gerth/advising/thesis/anders-strand-holm-vinther_magnus-st
 https://en.wikipedia.org/wiki/A*_search_algorithm
 
 https://en.wikipedia.org/wiki/Jump_point_search
+
+http://users.cecs.anu.edu.au/~dharabor/data/papers/harabor-grastien-icaps14.pdf
