@@ -1,0 +1,38 @@
+plugins {
+    id 'application'
+    id 'jacoco'
+    id 'checkstyle'
+}
+
+repositories {
+    jcenter()
+}
+
+configurations {
+    checkstyleConfig
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13'
+    implementation 'com.google.guava:guava:29.0-jre'
+    checkstyleConfig("com.puppycrawl.tools:checkstyle:8.32") { transitive = false }
+}
+
+mainClassName = 'pfvisualizer.main.Main'
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['pfvisualizer/main/**'])
+        }))
+    }
+}
+
+checkstyle {
+    toolVersion '8.32'
+    config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
+}
