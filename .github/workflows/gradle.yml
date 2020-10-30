@@ -18,8 +18,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./application/gradlew test
     - name: Create a code coverage report
-      run: ./gradlew jacocoTestReport
+      run: ./application/gradlew jacocoTestReport
     - name: Send data to codecov
       run: bash <(curl -s https://codecov.io/bash)
