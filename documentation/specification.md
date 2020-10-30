@@ -4,7 +4,7 @@ Alkuhuomautus: Olen tietojenkäsittelytieteen kandiohjelmassa (TKT).
 
 ## Overview of the program
 
-The program compares and visualizes path-finding algorithms on 2D grid maps from [Moving AI Labs](https://movingai.com/benchmarks/grids.html). Additionally, the scenario files will be used for testing. The scenarios assume that the maps are 8-connected with diagonal movement cost of sqrt(2). In the simplest version of the program, the name of the algorithm and the file name of a map are provided as command line arguments and the program shows the runtime of the algorithm along with an image of the map where the optimal path and visited nodes are colorized. Graphical UI, side-by-side comparisons and animations may be added if time permits. Code, comments and documentation will be written in English.
+The program compares and visualizes path-finding algorithms on 2D grid maps from [Moving AI Labs](https://movingai.com/benchmarks/grids.html). Additionally, the scenario files will be used for testing. The scenarios assume that the maps are 8-connected with diagonal movement cost of sqrt(2). In the simplest version of the program, the name of the algorithm and the file name of a map are provided as command line arguments. Based on the arguments given, the program shows the runtime of the selected algorithm along with an image of the map where the optimal path and visited nodes are colorized. Graphical UI, side-by-side comparisons and animations may be added if time permits. Code, comments and documentation will be written in English.
 
 ## Algorithms
 
