@@ -9,7 +9,7 @@ I created a Gradle project for the program and tried to do as much of the config
 I also found about commons-cli library that provides utilities for parsing command line options and also generates help messages. Adding it in to
 the project proved to be somewhat difficult because I am not very familiar with Gradle. Eventually I did manage to get it working.
 
-I wrote a crude parser for the map files provided by Moving AI Labs. The scenario files would make testing quite straight-forward. The solutions given assume a diagonal cost of sqrt(2) though. This value can be hard coded as a constant but still requires the program to use floating-point numbers.
+I wrote a crude parser for the map files provided by Moving AI Labs with simple unit tests. It doesn't support all the map features yet but should be enough to get started. The scenario files would make testing quite straight-forward so a parser for them would be nice as well. The solutions given assume a diagonal cost of sqrt(2) though. This value can be hard coded as a constant but still requires the program to use floating-point numbers.
 
 Next week I am going to start implementing path-finding algorithms using data structures from the Java library.
 
