@@ -1,5 +1,8 @@
 # pathfinding-visualizer
 
+![GitHub Actions](https://github.com/tapanih/pathfinding-visualizer/workflows/Java%20CI%20with%20Gradle/badge.svg)
+[![codecov](https://codecov.io/gh/tapanih/pathfinding-visualizer/branch/main/graph/badge.svg?token=Q4SNQEBRVN)](https://codecov.io/gh/tapanih/pathfinding-visualizer)
+
 ## Documentation
 
 [Specifications](documentation/specification.md)
