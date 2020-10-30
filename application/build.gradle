@@ -1,4 +1,5 @@
 plugins {
+    id 'java'
     id 'application'
     id 'jacoco'
     id 'checkstyle'
@@ -15,6 +16,7 @@ configurations {
 dependencies {
     testImplementation 'junit:junit:4.13'
     implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'commons-cli:commons-cli:1.4'
     checkstyleConfig("com.puppycrawl.tools:checkstyle:8.32") { transitive = false }
 }
 
