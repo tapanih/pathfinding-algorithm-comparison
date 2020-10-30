@@ -21,23 +21,17 @@ The algorithm requires a priority queue which can be implemented in various ways
 
 \* = amortized time complexity
 
-The algorithm needs a hash map with insert and find-key operations to store visited squares. The amortized time complexity of these operations should be O(1).
+The algorithm needs a hash map with insert and find-key operations to store visited squares. The amortized time complexity of these operations should be O(1). Collisions will probably be handled by making every bucket a linked list.
 
 ### A* Algorithm
 
-A* algorithm is an optimization of Dijkstra's. The time and space complexity should similarly be O(n log n) but with larger constants due to the added heuristic function. 
+A* algorithm is an optimization of Dijkstra's. The time and space complexity should similarly be O(n log n) but with larger constants due to the added heuristic function. The heuristic function should take into account that only horizontal, vertical and diagonal movement is permitted.
 
 Like Dijkstra's algorithm, A*  also requires a priority queue and a hash map.
 
 ### Jump point search (JPS)
 
 Jump point search is an optimization of A* which avoids processing unnecessary cases by making long jumps along vertical or horizontal lines.
-
-### Fringe search
-
-Fringe search is an interesting A* variant that is more optimal than A* according to this publication: http://www.ru.is/faculty/yngvi/pdf/BjornssonEHS05.pdf
-
-This algorithm may or may not be implemented.
 
 ### References
 
