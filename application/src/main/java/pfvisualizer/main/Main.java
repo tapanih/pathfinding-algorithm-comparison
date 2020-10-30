@@ -1,9 +1,24 @@
 package pfvisualizer.main;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
+/**
+ * The main program.
+ */
 public class Main {
-  public static void main(String[] args) throws Exception {
+
+  /**
+   * The entry point into the application.
+   *
+   * @param args Command line arguments
+   */
+  public static void main(String[] args) {
     Options options = new Options();
     options.addOption(Option.builder("a")
         .desc("pathfinding algorithm to test")
