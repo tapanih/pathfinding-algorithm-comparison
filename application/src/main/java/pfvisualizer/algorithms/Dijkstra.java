@@ -11,21 +11,13 @@ import static pfvisualizer.util.Constants.STRAIGHT_DISTANCE;
 
 public class Dijkstra implements Pathfinder {
 
-  private ArrayList<Node> buildPath(Node node) {
-    ArrayList<Node> path = new ArrayList<>();
-    while (node != null) {
-      path.add(node);
-      node = node.getPrevious();
-    }
-    return path;
-  }
-
   @Override
   public ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
     Node start = new Node(startRow, startCol);
     Node end = new Node(endRow, endCol);
     int height = grid.length;
     int width = grid[0].length;
+
     float[][] dist = new float[height][width];
     for (int row = 0; row < height; row++) {
       for (int col = 0; col < width; col++) {
@@ -33,7 +25,7 @@ public class Dijkstra implements Pathfinder {
       }
     }
     dist[start.row][start.col] = 0;
-    // this should be unnecessary because of the
+
     boolean[][] visited = new boolean[height][width];
     PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingDouble(Node::getDistance));
     queue.add(start);
@@ -47,6 +39,7 @@ public class Dijkstra implements Pathfinder {
       }
       visited[node.row][node.col] = true;
 
+      // loop through all the neighbors
       for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
         for (int colOffset = -1; colOffset <= 1; colOffset++) {
           if (rowOffset == 0 && colOffset == 0) {
