@@ -8,13 +8,14 @@ public class Node {
   private final float distance;
   private final Node previous;
 
-  public Node(int row, int col) {
-    this.row = row;
-    this.col = col;
-    this.distance = 0;
-    this.previous = null;
-  }
-
+  /**
+   * Constructs a node that is used in pathfinding.
+   *
+   * @param row the row number
+   * @param col the column number
+   * @param distance the distance to the start node along some path
+   * @param previous the parent node
+   */
   public Node(int row, int col, float distance, Node previous) {
     this.row = row;
     this.col = col;
@@ -49,10 +50,6 @@ public class Node {
 
   @Override
   public String toString() {
-    return "Node{" +
-        "row=" + row +
-        ", col=" + col +
-        ", distance=" + distance +
-        '}';
+    return "Node{" + "row=" + row + ", col=" + col + ", distance=" + distance + '}';
   }
 }

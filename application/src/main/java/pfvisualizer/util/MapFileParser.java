@@ -5,7 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * A class for parsing map files that are using the Moving AI Labs format: https://movingai.com/benchmarks/formats.html.
+ * A class for parsing map files that are using the Moving AI Labs format:
+ *     https://movingai.com/benchmarks/formats.html.
  */
 public class MapFileParser {
 
@@ -13,7 +14,8 @@ public class MapFileParser {
    * Parses the map file given as the argument.
    *
    * @param fileName The map file
-   * @return the map as a 2d int array where 0 indicates the square is passable and 1 means it is not
+   * @return the map as a 2d int array where 0 indicates
+   *     the square is passable and 1 means it is not
    */
   public static int[][] parse(String fileName) throws IOException { //TODO: handle exceptions better
     BufferedReader br = new BufferedReader(new FileReader(fileName));

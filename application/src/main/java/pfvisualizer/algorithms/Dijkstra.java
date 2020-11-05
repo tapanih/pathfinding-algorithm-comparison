@@ -1,20 +1,19 @@
 package pfvisualizer.algorithms;
 
-import pfvisualizer.util.Node;
+import static pfvisualizer.util.Constants.DIAGONAL_DISTANCE;
+import static pfvisualizer.util.Constants.STRAIGHT_DISTANCE;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-
-import static pfvisualizer.util.Constants.DIAGONAL_DISTANCE;
-import static pfvisualizer.util.Constants.STRAIGHT_DISTANCE;
+import pfvisualizer.util.Node;
 
 public class Dijkstra implements Pathfinder {
 
   @Override
   public ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
-    Node start = new Node(startRow, startCol);
-    Node end = new Node(endRow, endCol);
+    Node start = new Node(startRow, startCol, 0, null);
+    Node end = new Node(endRow, endCol, Float.POSITIVE_INFINITY, null);
     int height = grid.length;
     int width = grid[0].length;
 
@@ -57,7 +56,6 @@ public class Dijkstra implements Pathfinder {
           if (grid[newRow][newCol] == 1) {
             continue;
           }
-
 
           float edgeLength = STRAIGHT_DISTANCE;
 

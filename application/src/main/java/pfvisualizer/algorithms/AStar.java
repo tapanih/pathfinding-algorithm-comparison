@@ -1,8 +1,7 @@
 package pfvisualizer.algorithms;
 
-import pfvisualizer.util.Node;
-
 import java.util.ArrayList;
+import pfvisualizer.util.Node;
 
 public class AStar implements Pathfinder {
   @Override
