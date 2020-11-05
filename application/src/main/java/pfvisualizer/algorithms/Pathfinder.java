@@ -1,6 +1,9 @@
 package pfvisualizer.algorithms;
 
+import pfvisualizer.util.Node;
+
+import java.util.ArrayList;
+
 public interface Pathfinder {
-  // only returns the length for now
-  public float search(int[][] grid);
+  public ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
 }

@@ -5,10 +5,29 @@ import java.util.Objects;
 public class Node {
   public final int row;
   public final int col;
+  private final float distance;
+  private final Node previous;
 
   public Node(int row, int col) {
     this.row = row;
     this.col = col;
+    this.distance = 0;
+    this.previous = null;
+  }
+
+  public Node(int row, int col, float distance, Node previous) {
+    this.row = row;
+    this.col = col;
+    this.distance = distance;
+    this.previous = previous;
+  }
+
+  public float getDistance() {
+    return distance;
+  }
+
+  public Node getPrevious() {
+    return previous;
   }
 
   @Override
@@ -26,5 +45,14 @@ public class Node {
   @Override
   public int hashCode() {
     return Objects.hash(row, col);
+  }
+
+  @Override
+  public String toString() {
+    return "Node{" +
+        "row=" + row +
+        ", col=" + col +
+        ", distance=" + distance +
+        '}';
   }
 }
