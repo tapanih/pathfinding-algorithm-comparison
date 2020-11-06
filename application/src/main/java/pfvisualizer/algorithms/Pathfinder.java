@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import pfvisualizer.util.Node;
 
 public interface Pathfinder {
-  ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
+  float STRAIGHT_DISTANCE = 1;
+  float DIAGONAL_DISTANCE = 1.41421356237f;
 
+  ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
 
   /**
    * Reconstructs the path found by the pathfinding algorithm.
