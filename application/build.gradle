@@ -37,4 +37,6 @@ jacocoTestReport {
 checkstyle {
     toolVersion '8.32'
     config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
+    ignoreFailures = false
+    maxWarnings = 0
 }
