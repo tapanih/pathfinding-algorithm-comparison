@@ -40,7 +40,7 @@ public class DijkstraTest {
     Dijkstra dijkstra = new Dijkstra();
     ArrayList<Node> path = dijkstra.search(map, 1, 1, 6, 6);
     assertEquals(6, path.size());
-    assertEquals(7.07106f, path.get(0).getDistance(), delta);
+    assertEquals(7.07106f, path.get(0).getHeuristic(), delta);
   }
 
   @Test
@@ -58,6 +58,6 @@ public class DijkstraTest {
     Dijkstra dijkstra = new Dijkstra();
     ArrayList<Node> path = dijkstra.search(map, 1, 1, 4, 3);
     assertEquals(12, path.size());
-    assertEquals(11.8284f, path.get(0).getDistance(), delta);
+    assertEquals(11.8284f, path.get(0).getHeuristic(), delta);
   }
 }

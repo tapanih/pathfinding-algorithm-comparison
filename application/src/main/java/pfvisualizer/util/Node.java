@@ -3,53 +3,49 @@ package pfvisualizer.util;
 import java.util.Objects;
 
 public class Node {
-  public final int row;
-  public final int col;
-  private final float distance;
+  private final int row;
+  private final int col;
   private final Node previous;
+
+  // this heuristic value is used by path-finding algorithms
+  // at the end node the heuristic value will be the actual distance of the path
+  private float heuristic = 0;
 
   /**
    * Constructs a node that is used in pathfinding.
    *
    * @param row the row number
    * @param col the column number
-   * @param distance the distance to the start node along some path
    * @param previous the parent node
    */
-  public Node(int row, int col, float distance, Node previous) {
+  public Node(int row, int col, Node previous) {
     this.row = row;
     this.col = col;
-    this.distance = distance;
     this.previous = previous;
   }
 
-  public float getDistance() {
-    return distance;
+  public int getRow() {
+    return row;
+  }
+
+  public int getCol() {
+    return col;
   }
 
   public Node getPrevious() {
     return previous;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Node node = (Node) o;
-    return row == node.row && col == node.col;
+  public float getHeuristic() {
+    return heuristic;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(row, col);
+  public void setHeuristic(float heuristic) {
+    this.heuristic = heuristic;
   }
 
   @Override
   public String toString() {
-    return "Node{" + "row=" + row + ", col=" + col + ", distance=" + distance + '}';
+    return "Node{" + "row=" + getRow() + ", col=" + getCol() + ", heuristic=" + heuristic + '}';
   }
 }

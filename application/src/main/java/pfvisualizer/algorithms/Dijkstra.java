@@ -6,11 +6,15 @@ import java.util.PriorityQueue;
 import pfvisualizer.util.Node;
 
 public class Dijkstra implements Pathfinder {
+  protected float heuristic(Node node, Node end) {
+    return 0;
+  }
 
   @Override
   public ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
-    Node start = new Node(startRow, startCol, 0, null);
-    Node end = new Node(endRow, endCol, Float.POSITIVE_INFINITY, null);
+    Node end = new Node(endRow, endCol, null);
+    Node start = new Node(startRow, startCol, null);
+    start.setHeuristic(heuristic(start, end));
     int height = grid.length;
     int width = grid[0].length;
 
@@ -20,20 +24,20 @@ public class Dijkstra implements Pathfinder {
         dist[row][col] = Float.POSITIVE_INFINITY;
       }
     }
-    dist[start.row][start.col] = 0;
+    dist[start.getRow()][start.getCol()] = 0;
 
     boolean[][] visited = new boolean[height][width];
-    PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingDouble(Node::getDistance));
+    PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingDouble(Node::getHeuristic));
     queue.add(start);
     while (!queue.isEmpty()) {
       Node node = queue.poll();
-      if (node.equals(end)) {
+      if (node.getCol() == end.getCol() && node.getRow() == end.getRow()) {
         return buildPath(node);
       }
-      if (visited[node.row][node.col]) {
+      if (visited[node.getRow()][node.getCol()]) {
         continue;
       }
-      visited[node.row][node.col] = true;
+      visited[node.getRow()][node.getCol()] = true;
 
       // loop through all the neighbors
       for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
@@ -41,8 +45,8 @@ public class Dijkstra implements Pathfinder {
           if (rowOffset == 0 && colOffset == 0) {
             continue;
           }
-          int newRow = node.row + rowOffset;
-          int newCol = node.col + colOffset;
+          int newRow = node.getRow() + rowOffset;
+          int newCol = node.getCol() + colOffset;
 
           // check that we are not moving off the map
           if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
@@ -57,18 +61,20 @@ public class Dijkstra implements Pathfinder {
           float edgeLength = STRAIGHT_DISTANCE;
 
           // check if we are moving diagonally
-          if (node.row != newRow && node.col != newCol) {
+          if (node.getRow() != newRow && node.getCol() != newCol) {
             // if we are moving diagonally, check that we are not cutting corners
-            if (grid[newRow][node.col] == 1 || grid[node.row][newCol] == 1) {
+            if (grid[newRow][node.getCol()] == 1 || grid[node.getRow()][newCol] == 1) {
               continue;
             }
             edgeLength = DIAGONAL_DISTANCE;
           }
 
-          float newDistance = node.getDistance() + edgeLength;
+          float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
           if (dist[newRow][newCol] > newDistance) {
             dist[newRow][newCol] = newDistance;
-            queue.add(new Node(newRow, newCol, newDistance, node));
+            Node newNode = new Node(newRow, newCol, node);
+            newNode.setHeuristic(newDistance + heuristic(newNode, end));
+            queue.add(newNode);
           }
         }
       }
