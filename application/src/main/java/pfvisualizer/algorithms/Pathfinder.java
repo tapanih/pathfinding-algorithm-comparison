@@ -1,27 +1,24 @@
 package pfvisualizer.algorithms;
 
-import java.util.ArrayList;
 import pfvisualizer.util.Node;
+import pfvisualizer.util.Result;
 
 public interface Pathfinder {
   float STRAIGHT_DISTANCE = 1;
   float DIAGONAL_DISTANCE = 1.41421356237f;
 
-  ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
+  Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
 
   /**
-   * Reconstructs the path found by the pathfinding algorithm.
+   * Draws the path found by the algorithm to the map provided.
    *
    * @param node The end node of the path
-   * @return the list of nodes that comprise the path
-   *     (end node is the first element and start node is the last)
+   * @param map The map to draw the path into
    */
-  default ArrayList<Node> buildPath(Node node) {
-    ArrayList<Node> path = new ArrayList<>();
+  default void buildPath(Node node, int[][] map) {
     while (node != null) {
-      path.add(node);
+      map[node.getRow()][node.getCol()] = 4;
       node = node.getPrevious();
     }
-    return path;
   }
 }

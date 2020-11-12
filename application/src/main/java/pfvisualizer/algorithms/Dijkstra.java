@@ -1,9 +1,9 @@
 package pfvisualizer.algorithms;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import pfvisualizer.util.Node;
+import pfvisualizer.util.Result;
 
 public class Dijkstra implements Pathfinder {
   protected float heuristic(Node node, Node end) {
@@ -11,7 +11,7 @@ public class Dijkstra implements Pathfinder {
   }
 
   @Override
-  public ArrayList<Node> search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
+  public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
     Node end = new Node(endRow, endCol, null);
     Node start = new Node(startRow, startCol, null);
     start.setHeuristic(heuristic(start, end));
@@ -24,20 +24,28 @@ public class Dijkstra implements Pathfinder {
         dist[row][col] = Float.POSITIVE_INFINITY;
       }
     }
+
+    int[][] map = new int[height][width];
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        map[row][col] = grid[row][col];
+      }
+    }
+
     dist[start.getRow()][start.getCol()] = 0;
 
-    boolean[][] visited = new boolean[height][width];
     PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingDouble(Node::getHeuristic));
     queue.add(start);
     while (!queue.isEmpty()) {
       Node node = queue.poll();
       if (node.getCol() == end.getCol() && node.getRow() == end.getRow()) {
-        return buildPath(node);
+        buildPath(node, map);
+        return new Result(map, node.getHeuristic());
       }
-      if (visited[node.getRow()][node.getCol()]) {
+      if (map[node.getRow()][node.getCol()] == 2) {
         continue;
       }
-      visited[node.getRow()][node.getCol()] = true;
+      map[node.getRow()][node.getCol()] = 2;
 
       // loop through all the neighbors
       for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
