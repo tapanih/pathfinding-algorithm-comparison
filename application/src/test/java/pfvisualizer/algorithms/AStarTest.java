@@ -1,13 +1,10 @@
-package algorithms;
+package pfvisualizer.algorithms;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import org.junit.Test;
 import pfvisualizer.algorithms.AStar;
-import pfvisualizer.algorithms.Dijkstra;
-import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
 public class AStarTest {

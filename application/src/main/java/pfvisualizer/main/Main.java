@@ -1,7 +1,6 @@
 package pfvisualizer.main;
 
 import java.io.IOException;
-import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,9 +12,7 @@ import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.algorithms.Pathfinder;
 import pfvisualizer.util.MapFileParser;
-import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
-
 
 /**
  * The main program.

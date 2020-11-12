@@ -1,7 +1,7 @@
 package pfvisualizer.algorithms;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import pfvisualizer.data.BinaryHeap;
+import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
@@ -34,10 +34,10 @@ public class Dijkstra implements Pathfinder {
 
     dist[start.getRow()][start.getCol()] = 0;
 
-    PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingDouble(Node::getHeuristic));
-    queue.add(start);
-    while (!queue.isEmpty()) {
-      Node node = queue.poll();
+    Heap heap = new BinaryHeap();
+    heap.insert(start);
+    while (!heap.isEmpty()) {
+      Node node = heap.extractMin();
       if (node.getCol() == end.getCol() && node.getRow() == end.getRow()) {
         buildPath(node, map);
         return new Result(map, node.getHeuristic());
@@ -82,7 +82,7 @@ public class Dijkstra implements Pathfinder {
             dist[newRow][newCol] = newDistance;
             Node newNode = new Node(newRow, newCol, node);
             newNode.setHeuristic(newDistance + heuristic(newNode, end));
-            queue.add(newNode);
+            heap.insert(newNode);
           }
         }
       }

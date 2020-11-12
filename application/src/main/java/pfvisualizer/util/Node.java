@@ -1,7 +1,5 @@
 package pfvisualizer.util;
 
-import java.util.Objects;
-
 public class Node {
   private final int row;
   private final int col;
