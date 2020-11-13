@@ -9,7 +9,7 @@ public interface Pathfinder {
   int VISITED = 2;
   int PATH = 4;
   float STRAIGHT_DISTANCE = 1;
-  float DIAGONAL_DISTANCE = 1.41421356237f;
+  float DIAGONAL_DISTANCE = 1.41421356237f; // sqrt(2)
 
   Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
 

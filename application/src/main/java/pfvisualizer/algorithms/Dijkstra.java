@@ -6,6 +6,9 @@ import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
 public class Dijkstra implements Pathfinder {
+  protected int[][] directions = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1},
+                                  {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
   protected float heuristic(Node node, Node end) {
     return 0;
   }
@@ -27,9 +30,7 @@ public class Dijkstra implements Pathfinder {
 
     int[][] map = new int[height][width];
     for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        map[row][col] = grid[row][col];
-      }
+      System.arraycopy(grid[row], 0, map[row], 0, width);
     }
 
     dist[start.getRow()][start.getCol()] = 0;
@@ -42,48 +43,40 @@ public class Dijkstra implements Pathfinder {
         buildPath(node, map);
         return new Result(map, node.getHeuristic());
       }
-      if (map[node.getRow()][node.getCol()] == VISITED) {
-        continue;
-      }
       map[node.getRow()][node.getCol()] = VISITED;
 
       // loop through all the neighbors
-      for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
-        for (int colOffset = -1; colOffset <= 1; colOffset++) {
-          if (rowOffset == 0 && colOffset == 0) {
+      for (int[] direction : directions) {
+        int newRow = node.getRow() + direction[0];
+        int newCol = node.getCol() + direction[1];
+
+        // check that we are not moving off the map
+        if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
+          continue;
+        }
+
+        // check that the square is passable and unvisited
+        if (grid[newRow][newCol] != UNVISITED) {
+          continue;
+        }
+
+        float edgeLength = STRAIGHT_DISTANCE;
+
+        // check if we are moving diagonally
+        if (node.getRow() != newRow && node.getCol() != newCol) {
+          // if we are moving diagonally, check that we are not cutting corners
+          if (grid[newRow][node.getCol()] == WALL || grid[node.getRow()][newCol] == WALL) {
             continue;
           }
-          int newRow = node.getRow() + rowOffset;
-          int newCol = node.getCol() + colOffset;
+          edgeLength = DIAGONAL_DISTANCE;
+        }
 
-          // check that we are not moving off the map
-          if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
-            continue;
-          }
-
-          // check that the square is passable
-          if (grid[newRow][newCol] == WALL) {
-            continue;
-          }
-
-          float edgeLength = STRAIGHT_DISTANCE;
-
-          // check if we are moving diagonally
-          if (node.getRow() != newRow && node.getCol() != newCol) {
-            // if we are moving diagonally, check that we are not cutting corners
-            if (grid[newRow][node.getCol()] == WALL || grid[node.getRow()][newCol] == WALL) {
-              continue;
-            }
-            edgeLength = DIAGONAL_DISTANCE;
-          }
-
-          float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
-          if (dist[newRow][newCol] > newDistance) {
-            dist[newRow][newCol] = newDistance;
-            Node newNode = new Node(newRow, newCol, node);
-            newNode.setHeuristic(newDistance + heuristic(newNode, end));
-            heap.insert(newNode);
-          }
+        float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
+        if (dist[newRow][newCol] > newDistance) {
+          dist[newRow][newCol] = newDistance;
+          Node newNode = new Node(newRow, newCol, node);
+          newNode.setHeuristic(newDistance + heuristic(newNode, end));
+          heap.insert(newNode);
         }
       }
     }
