@@ -1,8 +1,8 @@
-Week 3:
+## Week 3:
 
 Work time: 10 hours
 
-I thought about how to visualize the data. First I was thinking about making a JavaFX application but that seems like a lot of work for no gain as far as course grading goes. I’m thinking about outputting an image with different colors for walls, path, visited nodes and unvisited nodes. Using ImageIO should work nicely for that.
+I thought about how to visualize the data. First I was thinking about making a JavaFX application but that seems like a lot of work for no gain as far as course grading goes. I’m thinking about outputting an image with different colors for walls, path, visited nodes and unvisited nodes. Using ImageIO should work nicely for that. I do want to make a scenario file parser for performance testing, though.
 
 I made the program accept the algorithm name, map file, start coordinates and end coordinates can be given as arguments. Then the map and the distance of the path are printed to the console. This is obviously not a good interface because after a certain width, the map becomes unreadable. The map also looks skewed in the vertical direction because of the letter size. It is good enough for some basic testing, though.
 
