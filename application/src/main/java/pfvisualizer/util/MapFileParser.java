@@ -30,9 +30,9 @@ public class MapFileParser {
       String st = br.readLine();
       for (int x = 0; x < width; x++) {
         if (st.charAt(x) == '.') {
-          map[y][x] = 0;
+          map[y][x] = 0; // passable
         } else {
-          map[y][x] = 1;
+          map[y][x] = 1; // wall
         }
       }
     }

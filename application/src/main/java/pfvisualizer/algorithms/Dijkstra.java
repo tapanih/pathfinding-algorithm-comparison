@@ -42,10 +42,10 @@ public class Dijkstra implements Pathfinder {
         buildPath(node, map);
         return new Result(map, node.getHeuristic());
       }
-      if (map[node.getRow()][node.getCol()] == 2) {
+      if (map[node.getRow()][node.getCol()] == VISITED) {
         continue;
       }
-      map[node.getRow()][node.getCol()] = 2;
+      map[node.getRow()][node.getCol()] = VISITED;
 
       // loop through all the neighbors
       for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
@@ -62,7 +62,7 @@ public class Dijkstra implements Pathfinder {
           }
 
           // check that the square is passable
-          if (grid[newRow][newCol] == 1) {
+          if (grid[newRow][newCol] == WALL) {
             continue;
           }
 
@@ -71,7 +71,7 @@ public class Dijkstra implements Pathfinder {
           // check if we are moving diagonally
           if (node.getRow() != newRow && node.getCol() != newCol) {
             // if we are moving diagonally, check that we are not cutting corners
-            if (grid[newRow][node.getCol()] == 1 || grid[node.getRow()][newCol] == 1) {
+            if (grid[newRow][node.getCol()] == WALL || grid[node.getRow()][newCol] == WALL) {
               continue;
             }
             edgeLength = DIAGONAL_DISTANCE;
