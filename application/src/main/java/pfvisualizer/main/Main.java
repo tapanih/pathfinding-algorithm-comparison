@@ -10,6 +10,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
+import pfvisualizer.algorithms.JumpPointSearch;
 import pfvisualizer.algorithms.Pathfinder;
 import pfvisualizer.util.MapFileParser;
 import pfvisualizer.util.Result;
@@ -27,7 +28,7 @@ public class Main {
   public static void main(String[] args) {
     Options options = new Options();
     options.addOption(Option.builder("a")
-        .desc("pathfinding algorithm to test\n (a for A* and d for Dijkstra)")
+        .desc("pathfinding algorithm to test\n (a for A*, d for Dijkstra and j for JPS)")
         .longOpt("algorithm")
         .hasArg()
         .argName("name")
@@ -69,8 +70,10 @@ public class Main {
       algorithm = new Dijkstra();
     } else if (algorithmName.equals("a")) {
       algorithm = new AStar();
+    } else if (algorithmName.equals("j")) {
+      algorithm = new JumpPointSearch();
     } else {
-      System.out.println("Invalid algorithm name. Valid options are: a d");
+      System.out.println("Invalid algorithm name. Valid options are: a d j");
       formatter.printHelp("pathfinder-visualizer", options);
       return;
     }

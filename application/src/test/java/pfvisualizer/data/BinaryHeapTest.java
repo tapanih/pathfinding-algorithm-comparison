@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import pfvisualizer.data.BinaryHeap;
 import pfvisualizer.util.Node;
 
 public class BinaryHeapTest {

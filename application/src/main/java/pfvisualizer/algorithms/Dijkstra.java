@@ -56,7 +56,7 @@ public class Dijkstra implements Pathfinder {
         }
 
         // check that the square is passable and unvisited
-        if (grid[newRow][newCol] != UNVISITED) {
+        if (map[newRow][newCol] != UNVISITED) {
           continue;
         }
 
