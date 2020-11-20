@@ -45,17 +45,19 @@ public class JumpPointSearch extends AStar {
 
       // loop through all the neighbors
       for (Node neighbor : identifySuccessors(node)) {
+
         int newRow = neighbor.getRow();
         int newCol = neighbor.getCol();
-        int rowDist = Math.abs(neighbor.getRow() - node.getRow());
-        int colDist = Math.abs(neighbor.getCol() - node.getCol());
 
         // check that the square is passable and unvisited
         if (map[newRow][newCol] != UNVISITED) {
           continue;
         }
 
-        float edgeLength = STRAIGHT_DISTANCE * (rowDist + colDist) + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
+        int rowDist = Math.abs(neighbor.getRow() - node.getRow());
+        int colDist = Math.abs(neighbor.getCol() - node.getCol());
+
+        float edgeLength = STRAIGHT_DISTANCE * Math.abs(rowDist - colDist) + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
 
         float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
         if (dist[newRow][newCol] > newDistance) {
@@ -92,20 +94,20 @@ public class JumpPointSearch extends AStar {
       }
     } else {
       // horizontal jumps
-      if (deltaRow == 0 && !isBlocked(row, col + deltaCol)) {
-        if (isBlocked(row + 1, col) && !isBlocked(row + 1, col + deltaCol)) {
-          return new Node(row, col + deltaCol, node.getPrevious());
+      if (deltaRow == 0) {
+        if (!isBlocked(row + 1, col) && isBlocked(row + 1, col - deltaCol)) {
+          return node;
         }
-        if (isBlocked(row - 1, col) && !isBlocked(row - 1, col + deltaCol)) {
-          return new Node(row, col + deltaCol, node.getPrevious());
+        if (isBlocked(row - 1, col) && isBlocked(row - 1, col - deltaCol)) {
+          return node;
         }
         // vertical jumps
-      } else if (!isBlocked(row + deltaRow, col)) {
-        if (isBlocked(row, col + 1) && !isBlocked(row + deltaRow, col + 1)) {
-          return new Node(row + deltaRow, col, node.getPrevious());
+      } else {
+        if (!isBlocked(row, col + 1) && isBlocked(row - deltaRow, col + 1)) {
+          return node;
         }
-        if (isBlocked(row, col - 1) && !isBlocked(row + deltaRow, col - 1)) {
-          return new Node(row + deltaRow, col, node.getPrevious());
+        if (!isBlocked(row, col - 1) && isBlocked(row - deltaRow, col - 1)) {
+          return node;
         }
       }
     }
