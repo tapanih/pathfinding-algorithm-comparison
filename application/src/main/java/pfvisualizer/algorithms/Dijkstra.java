@@ -9,7 +9,9 @@ import pfvisualizer.util.Result;
 public class Dijkstra implements Pathfinder {
   protected int height;
   protected int width;
+  protected Node end;
   protected int[][] grid;
+  protected int[][] map;
   protected int[][] directions = {{-1, -1},  {1, -1}, {-1, 1}, {1, 1},
                                   {0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 
@@ -20,7 +22,7 @@ public class Dijkstra implements Pathfinder {
   @Override
   public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
     this.grid = grid;
-    Node end = new Node(endRow, endCol, null);
+    this.end = new Node(endRow, endCol, null);
     Node start = new Node(startRow, startCol, null);
     start.setHeuristic(heuristic(start, end));
     height = grid.length;
@@ -33,7 +35,7 @@ public class Dijkstra implements Pathfinder {
       }
     }
 
-    int[][] map = new int[height][width];
+    this.map = new int[height][width];
     for (int row = 0; row < height; row++) {
       System.arraycopy(grid[row], 0, map[row], 0, width);
     }
@@ -51,21 +53,11 @@ public class Dijkstra implements Pathfinder {
       map[node.getRow()][node.getCol()] = VISITED;
 
       // loop through all the neighbors
-      for (Node neighbor : getNeighbors(node)) {
+      for (Node neighbor : getSuccessors(node)) {
         int newRow = neighbor.getRow();
         int newCol = neighbor.getCol();
 
-        // check that the square is passable and unvisited
-        if (map[newRow][newCol] != UNVISITED) {
-          continue;
-        }
-
-        float edgeLength = STRAIGHT_DISTANCE;
-
-        // check if we are moving diagonally
-        if (node.getRow() != newRow && node.getCol() != newCol) {
-          edgeLength = DIAGONAL_DISTANCE;
-        }
+        float edgeLength = getDistanceBetween(node, neighbor);
 
         float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
         if (dist[newRow][newCol] > newDistance) {
@@ -80,14 +72,26 @@ public class Dijkstra implements Pathfinder {
   }
 
   /**
-   * Returns a list of adjacent nodes that can be moved into from the given parent node.
+   * Calculates the distance between two nodes.
+   *
+   * @return distance between nodes
    */
-  protected Node[] getNeighbors(Node node) {
+  protected float getDistanceBetween(Node first, Node second) {
+    if (first.getCol() != second.getCol() && first.getRow() != second.getRow()) {
+      return DIAGONAL_DISTANCE;
+    }
+    return STRAIGHT_DISTANCE;
+  }
+
+  /**
+   * Returns a list of nodes that can be moved into from the given parent node.
+   */
+  protected Node[] getSuccessors(Node node) {
     int row = node.getRow();
     int col = node.getCol();
     Node[] neighbors = new Node[8];
     int i = 0;
-    for (int[] direction: directions) {
+    for (int[] direction : directions) {
       int deltaRow = direction[0];
       int deltaCol = direction[1];
 
@@ -112,9 +116,6 @@ public class Dijkstra implements Pathfinder {
     if (row < 0 || row >= height || col < 0 || col >= width) {
       return true;
     }
-    if (grid[row][col] == WALL) {
-      return true;
-    }
-    return false;
+    return grid[row][col] == WALL;
   }
 }

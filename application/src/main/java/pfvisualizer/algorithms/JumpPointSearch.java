@@ -1,70 +1,43 @@
 package pfvisualizer.algorithms;
 
 import java.util.Arrays;
-import pfvisualizer.data.BinaryHeap;
-import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
-import pfvisualizer.util.Result;
 
 public class JumpPointSearch extends AStar {
-  private Node end;
-  private int[][] map;
 
   @Override
-  public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
-    this.grid = grid;
-    end = new Node(endRow, endCol, null);
-    Node start = new Node(startRow, startCol, null);
-    start.setHeuristic(heuristic(start, end));
-    height = grid.length;
-    width = grid[0].length;
+  protected float getDistanceBetween(Node first, Node second) {
+    int rowDist = Math.abs(first.getRow() - second.getRow());
+    int colDist = Math.abs(first.getCol() - second.getCol());
 
-    float[][] dist = new float[height][width];
-    for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        dist[row][col] = Float.POSITIVE_INFINITY;
-      }
-    }
-
-    this.map = new int[height][width];
-    for (int row = 0; row < height; row++) {
-      System.arraycopy(grid[row], 0, map[row], 0, width);
-    }
-
-    dist[start.getRow()][start.getCol()] = 0;
-
-    Heap heap = new BinaryHeap();
-    heap.insert(start);
-    while (!heap.isEmpty()) {
-      Node node = heap.extractMin();
-      if (node.getCol() == end.getCol() && node.getRow() == end.getRow()) {
-        buildPath(node, map);
-        return new Result(map, node.getHeuristic());
-      }
-
-      // loop through all the generated jump points
-      for (Node neighbor : identifySuccessors(node)) {
-
-        int newRow = neighbor.getRow();
-        int newCol = neighbor.getCol();
-
-        int rowDist = Math.abs(neighbor.getRow() - node.getRow());
-        int colDist = Math.abs(neighbor.getCol() - node.getCol());
-
-        float edgeLength = STRAIGHT_DISTANCE * Math.abs(rowDist - colDist)
-                           + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
-
-        float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
-        if (dist[newRow][newCol] > newDistance) {
-          dist[newRow][newCol] = newDistance;
-          neighbor.setHeuristic(newDistance + heuristic(neighbor, end));
-          heap.insert(neighbor);
-        }
-      }
-    }
-    return null;
+    return STRAIGHT_DISTANCE * Math.abs(rowDist - colDist)
+        + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
   }
 
+  /**
+   * Finds jump points.
+   */
+  @Override
+  protected Node[] getSuccessors(Node node) {
+    Node[] successors = new Node[8];
+    int i = 0;
+    for (Node neighbor : getPrunedNeighbors(node)) {
+
+      int deltaRow = neighbor.getRow() - node.getRow();
+      int deltaCol = neighbor.getCol() - node.getCol();
+      Node jumpNode = jump(neighbor, deltaRow, deltaCol);
+      if (jumpNode != null && map[jumpNode.getRow()][jumpNode.getCol()] == UNVISITED) {
+        successors[i++] = jumpNode;
+      }
+    }
+    return Arrays.copyOf(successors, i);
+  }
+
+  /**
+   * Recursively finds a jump point given a parent node and a direction.
+   *
+   * @return The jump point
+   */
   private Node jump(Node node, int deltaRow, int deltaCol) {
     int row = node.getRow();
     int col = node.getCol();
@@ -112,31 +85,16 @@ public class JumpPointSearch extends AStar {
     return jump(next, deltaRow, deltaCol);
   }
 
-  /*
-   * Finds jump points.
+
+  /**
+   * Returns a list of neighbouring nodes after pruning.
    */
-  private Node[] identifySuccessors(Node node) {
-    Node[] successors = new Node[8];
-    int i = 0;
-    for (Node neighbor : getNeighbors(node)) {
-
-      int deltaRow = neighbor.getRow() - node.getRow();
-      int deltaCol = neighbor.getCol() - node.getCol();
-      Node jumpNode = jump(neighbor, deltaRow, deltaCol);
-      if (jumpNode != null && map[jumpNode.getRow()][jumpNode.getCol()] == UNVISITED) {
-        successors[i++] = jumpNode;
-      }
-    }
-    return Arrays.copyOf(successors, i);
-  }
-
-  @Override
-  protected Node[] getNeighbors(Node node) {
+  private Node[] getPrunedNeighbors(Node node) {
     Node parent = node.getPrevious();
 
     // return all neighbors if there is no parent
     if (parent == null) {
-      return super.getNeighbors(node);
+      return super.getSuccessors(node);
     }
 
     Node[] neighbors = new Node[5];
