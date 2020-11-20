@@ -5,9 +5,14 @@ import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
+import java.util.Arrays;
+
 public class Dijkstra implements Pathfinder {
-  protected int[][] directions = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1},
-                                  {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+  protected int height;
+  protected int width;
+  protected int[][] grid;
+  protected int[][] directions = {{-1, -1},  {1, -1}, {-1, 1}, {1, 1},
+                                  {0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 
   protected float heuristic(Node node, Node end) {
     return 0;
@@ -15,11 +20,12 @@ public class Dijkstra implements Pathfinder {
 
   @Override
   public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
+    this.grid = grid;
     Node end = new Node(endRow, endCol, null);
     Node start = new Node(startRow, startCol, null);
     start.setHeuristic(heuristic(start, end));
-    int height = grid.length;
-    int width = grid[0].length;
+    height = grid.length;
+    width = grid[0].length;
 
     float[][] dist = new float[height][width];
     for (int row = 0; row < height; row++) {
@@ -46,14 +52,9 @@ public class Dijkstra implements Pathfinder {
       map[node.getRow()][node.getCol()] = VISITED;
 
       // loop through all the neighbors
-      for (int[] direction : directions) {
-        int newRow = node.getRow() + direction[0];
-        int newCol = node.getCol() + direction[1];
-
-        // check that we are not moving off the map
-        if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
-          continue;
-        }
+      for (Node neighbor : getNeighbors(node)) {
+        int newRow = neighbor.getRow();
+        int newCol = neighbor.getCol();
 
         // check that the square is passable and unvisited
         if (map[newRow][newCol] != UNVISITED) {
@@ -64,10 +65,6 @@ public class Dijkstra implements Pathfinder {
 
         // check if we are moving diagonally
         if (node.getRow() != newRow && node.getCol() != newCol) {
-          // if we are moving diagonally, check that we are not cutting corners
-          if (grid[newRow][node.getCol()] == WALL || grid[node.getRow()][newCol] == WALL) {
-            continue;
-          }
           edgeLength = DIAGONAL_DISTANCE;
         }
 
@@ -81,5 +78,44 @@ public class Dijkstra implements Pathfinder {
       }
     }
     return null;
+  }
+
+  /**
+   * Returns a list of adjacent nodes that can be moved into from the given parent node.
+   */
+  protected Node[] getNeighbors(Node node) {
+    int row = node.getRow();
+    int col = node.getCol();
+    Node[] neighbors = new Node[8];
+    int i = 0;
+    for (int[] direction: directions) {
+      int deltaRow = direction[0];
+      int deltaCol = direction[1];
+
+      if (isBlocked(row + deltaRow, col + deltaCol)) {
+        continue;
+      }
+
+      // if we are moving diagonally, check that we are not cutting corners
+      if (deltaRow != 0 && deltaCol != 0) {
+        if (grid[row + deltaRow][col] == WALL || grid[row][col + deltaCol] == WALL) {
+          continue;
+        }
+      }
+
+      neighbors[i++] = new Node(node.getRow() + deltaRow, node.getCol() + deltaCol, node);
+    }
+    return Arrays.copyOf(neighbors, i);
+  }
+
+  protected boolean isBlocked(int row, int col) {
+    // check boundaries
+    if (row < 0 || row >= height || col < 0 || col >= width) {
+      return true;
+    }
+    if (grid[row][col] == WALL) {
+      return true;
+    }
+    return false;
   }
 }

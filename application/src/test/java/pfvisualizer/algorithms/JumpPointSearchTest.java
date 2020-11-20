@@ -1,9 +1,9 @@
 package pfvisualizer.algorithms;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import pfvisualizer.util.Result;
-
-import static org.junit.Assert.assertEquals;
 
 public class JumpPointSearchTest {
   float delta = 0.001f;

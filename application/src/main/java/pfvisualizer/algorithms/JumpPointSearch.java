@@ -5,14 +5,15 @@ import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
+import java.util.Arrays;
+
 public class JumpPointSearch extends AStar {
-  private int height;
-  private int width;
-  private int directionCount = 0;
+  private Node end;
 
   @Override
   public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
-    Node end = new Node(endRow, endCol, null);
+    this.grid = grid;
+    end = new Node(endRow, endCol, null);
     Node start = new Node(startRow, startCol, null);
     start.setHeuristic(heuristic(start, end));
     height = grid.length;
@@ -42,131 +43,153 @@ public class JumpPointSearch extends AStar {
       }
       map[node.getRow()][node.getCol()] = VISITED;
 
-      int[][] directions = getDirections(node, grid);
       // loop through all the neighbors
-      for (int i = 0; i < directionCount; i++) {
-        int newRow = node.getRow() + directions[i][0];
-        int newCol = node.getCol() + directions[i][1];
-
-        // check that we are not moving off the map
-        if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
-          continue;
-        }
+      for (Node neighbor : identifySuccessors(node)) {
+        int newRow = neighbor.getRow();
+        int newCol = neighbor.getCol();
+        int rowDist = Math.abs(neighbor.getRow() - node.getRow());
+        int colDist = Math.abs(neighbor.getCol() - node.getCol());
 
         // check that the square is passable and unvisited
         if (map[newRow][newCol] != UNVISITED) {
           continue;
         }
 
-        float edgeLength = STRAIGHT_DISTANCE;
-
-        // check if we are moving diagonally
-        if (node.getRow() != newRow && node.getCol() != newCol) {
-          // if we are moving diagonally, check that we are not cutting corners
-          if (grid[newRow][node.getCol()] == WALL || grid[node.getRow()][newCol] == WALL) {
-            continue;
-          }
-          edgeLength = DIAGONAL_DISTANCE;
-        }
+        float edgeLength = STRAIGHT_DISTANCE * (rowDist + colDist) + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
 
         float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
         if (dist[newRow][newCol] > newDistance) {
           dist[newRow][newCol] = newDistance;
-          Node newNode = new Node(newRow, newCol, node);
-          newNode.setHeuristic(newDistance + heuristic(newNode, end));
-          heap.insert(newNode);
+          neighbor.setHeuristic(newDistance + heuristic(neighbor, end));
+          heap.insert(neighbor);
         }
       }
     }
     return null;
   }
 
-  private int[][] getDirections(Node node, int[][] grid) {
-    Node parent = node.getPrevious();
-    if (parent == null) {
-      directionCount = 8;
-      return directions;
-    }
-    int[][] dirs = new int[5][2];
-    directionCount = 0;
+  private Node jump(Node node, int deltaRow, int deltaCol) {
     int row = node.getRow();
     int col = node.getCol();
-    int deltaRow = row - parent.getRow();
-    int deltaCol = col - parent.getCol();
 
-    // diagonals
+    if (isBlocked(row, col)) {
+      return null;
+    }
+
+    if (col == end.getCol() && row == end.getRow()) {
+      return node;
+    }
+
+    // diagonal jumps
     if (deltaRow != 0 && deltaCol != 0) {
-      if (row + deltaRow >= 0 && row + deltaRow < height
-          && grid[row + deltaRow][col] != WALL) {
-        dirs[directionCount][0] = deltaRow;
-        dirs[directionCount][1] = 0;
-        directionCount++;
+      if (isBlocked(row + deltaRow, col) || isBlocked(row, col + deltaCol)) {
+        return node;
       }
-      if (col + deltaCol >= 0 && col + deltaCol < width
-          && grid[row][col + deltaCol] != WALL) {
-        dirs[directionCount][0] = 0;
-        dirs[directionCount][1] = deltaCol;
-        directionCount++;
+      // scan vertically and horizontally for jump points
+      if (jump(new Node(row + deltaRow, col, node), deltaRow, 0) != null
+              || jump(new Node(row, col + deltaCol, node), 0, deltaCol) != null) {
+        return node;
       }
-      if (row + deltaRow >= 0 && row + deltaRow < height
-          && col + deltaCol >= 0 && col + deltaCol < width
-          && grid[row + deltaRow][col + deltaCol] != WALL) {
-        dirs[directionCount][0] = deltaRow;
-        dirs[directionCount][1] = deltaCol;
-        directionCount++;
+    } else {
+      // horizontal jumps
+      if (deltaRow == 0 && !isBlocked(row, col + deltaCol)) {
+        if (isBlocked(row + 1, col) && !isBlocked(row + 1, col + deltaCol)) {
+          return new Node(row, col + deltaCol, node.getPrevious());
+        }
+        if (isBlocked(row - 1, col) && !isBlocked(row - 1, col + deltaCol)) {
+          return new Node(row, col + deltaCol, node.getPrevious());
+        }
+        // vertical jumps
+      } else if (!isBlocked(row + deltaRow, col)) {
+        if (isBlocked(row, col + 1) && !isBlocked(row + deltaRow, col + 1)) {
+          return new Node(row + deltaRow, col, node.getPrevious());
+        }
+        if (isBlocked(row, col - 1) && !isBlocked(row + deltaRow, col - 1)) {
+          return new Node(row + deltaRow, col, node.getPrevious());
+        }
       }
-      if (row - deltaRow >= 0 && row - deltaRow < height
-          && col + deltaCol >= 0 && col + deltaCol < width
-          && grid[row - deltaRow][col] == WALL) {
-        dirs[directionCount][0] = -deltaRow;
-        dirs[directionCount][1] = deltaCol;
-        directionCount++;
+    }
+    Node next = new Node(row + deltaRow, col + deltaCol, node.getPrevious());
+    return jump(next, deltaRow, deltaCol);
+  }
+
+  protected Node[] identifySuccessors(Node node) {
+    Node[] successors = new Node[8];
+    int i = 0;
+    for (Node neighbor : getNeighbors(node)) {
+
+      int deltaRow = neighbor.getRow() - node.getRow();
+      int deltaCol = neighbor.getCol() - node.getCol();
+      Node jumpNode = jump(neighbor, deltaRow, deltaCol);
+      if (jumpNode != null) {
+        successors[i++] = jumpNode;
       }
-      if (row + deltaRow >= 0 && row + deltaRow < height
-          && col - deltaCol >= 0 && col - deltaCol < width
-          && grid[row - deltaRow][col] == WALL) {
-        dirs[directionCount][0] = deltaRow;
-        dirs[directionCount][1] = -deltaCol;
-        directionCount++;
+    }
+    return Arrays.copyOf(successors, i);
+  }
+
+  @Override
+  protected Node[] getNeighbors(Node node) {
+    return super.getNeighbors(node);
+    /*
+    Node[] neighbors = new Node[5];
+    int row = node.getRow();
+    int col = node.getCol();
+    int deltaRow = (row - parent.getRow()) / Math.max(Math.abs(row - parent.getRow()), 1);
+    int deltaCol = (col - parent.getCol()) / Math.max(Math.abs(col - parent.getCol()), 1);
+    System.out.println(node + ", " + deltaRow + " " + deltaCol);
+    // diagonals
+    int i = 0;
+    if (deltaRow != 0 && deltaCol != 0) {
+      if (!isBlocked(row + deltaRow, col)) {
+        neighbors[i++] = new Node(row + deltaRow, col, null);
+      }
+      if (!isBlocked(row, col + deltaCol)) {
+        neighbors[i++] = new Node(row, col + deltaCol, null);
+      }
+      if (!isBlocked(row + deltaRow, col + deltaCol)
+          && !isBlocked(row + deltaRow, col) && !isBlocked(row, col + deltaCol)) {
+        neighbors[i++] = new Node(row + deltaRow, col + deltaCol, null);
+      }
+      // forced neighbors
+      if (isBlocked(row - deltaRow, col) && !isBlocked(row - deltaRow, col + deltaCol)
+              && !isBlocked(row, col + deltaCol)) {
+        neighbors[i++] = new Node(row - deltaRow, col + deltaCol, null);
+      }
+      if (isBlocked(row, col - deltaCol) && !isBlocked(row + deltaRow, col - deltaCol)
+              && !isBlocked(row + deltaRow, col)) {
+        neighbors[i++] = new Node(row + deltaRow, col - deltaCol, null);
       }
     } else {
       // horizontal
-      if (deltaRow == 0 && col + deltaCol >= 0 && col + deltaCol < width) {
-        if (grid[row][col + deltaCol] != WALL) {
-          dirs[directionCount][0] = 0;
-          dirs[directionCount][1] = deltaCol;
-          directionCount++;
+      if (deltaRow == 0 && !isBlocked(row, col + deltaCol)) {
+
+        neighbors[i++] = new Node(row, col + deltaCol, null);
+
+        // forced neighbors
+        if (isBlocked(row + 1, col) && !isBlocked(row + 1, col + deltaCol)) {
+          neighbors[i++] = new Node(row + 1, col + deltaCol, null);
         }
-        if (row + 1 < width && grid[row + 1][col] == WALL) {
-          dirs[directionCount][0] = 1;
-          dirs[directionCount][1] = deltaCol;
-          directionCount++;
+        if (isBlocked(row - 1, col) && !isBlocked(row - 1, col + deltaCol)) {
+          neighbors[i++] = new Node(row - 1, col + deltaCol, null);
         }
-        if (row - 1 >= 0 && grid[row - 1][col] == WALL) {
-          dirs[directionCount][0] = - 1;
-          dirs[directionCount][1] = deltaCol;
-          directionCount++;
+        // vertical
+      } else if (!isBlocked(row + deltaRow, col)) {
+
+        neighbors[i++] = new Node(row + deltaRow, col, null);
+
+        // forced neighbors
+        if (isBlocked(row, col + 1) && !isBlocked(row + deltaRow, col + 1)) {
+          neighbors[i++] = new Node(row + deltaRow, col + 1, null);
         }
-      }
-      // vertical
-      else if (row + deltaRow >= 0 && row + deltaRow < height) {
-        if (grid[row + deltaRow][col] != WALL) {
-          dirs[directionCount][0] = deltaRow;
-          dirs[directionCount][1] = 0;
-          directionCount++;
-        }
-        if (col + 1 < height && grid[row][col + 1] == WALL) {
-          dirs[directionCount][0] = deltaRow;
-          dirs[directionCount][1] = 1;
-          directionCount++;
-        }
-        if (col - 1 >= 0 && grid[row][col - 1] == WALL) {
-          dirs[directionCount][0] = deltaRow;
-          dirs[directionCount][1] = -1;
-          directionCount++;
+        if (isBlocked(row, col - 1) && !isBlocked(row + deltaRow, col - 1)) {
+          neighbors[i++] = new Node(row + deltaRow, col - 1, null);
         }
       }
     }
-    return dirs;
+    System.out.println(i);
+    return Arrays.copyOf(neighbors, i);
+  }
+     */
   }
 }

@@ -44,6 +44,8 @@ public class Node {
 
   @Override
   public String toString() {
-    return "Node{" + "row=" + getRow() + ", col=" + getCol() + ", heuristic=" + heuristic + '}';
+    return "Node{(" + getRow() + ", " + getCol() + "), heuristic=" + heuristic
+            + (getPrevious() != null ? (", (" + getPrevious().getRow() + ", " +  getPrevious().getCol() + ")") : "")
+            + "}";
   }
 }
