@@ -41,10 +41,10 @@ public class JumpPointSearch extends AStar {
         buildPath(node, map);
         return new Result(map, node.getHeuristic());
       }
-      map[node.getRow()][node.getCol()] = VISITED;
 
       // loop through all the neighbors
       for (Node neighbor : identifySuccessors(node)) {
+        System.out.println("jump point: " + neighbor);
 
         int newRow = neighbor.getRow();
         int newCol = neighbor.getCol();
@@ -57,7 +57,8 @@ public class JumpPointSearch extends AStar {
         int rowDist = Math.abs(neighbor.getRow() - node.getRow());
         int colDist = Math.abs(neighbor.getCol() - node.getCol());
 
-        float edgeLength = STRAIGHT_DISTANCE * Math.abs(rowDist - colDist) + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
+        float edgeLength = STRAIGHT_DISTANCE * Math.abs(rowDist - colDist)
+                           + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
 
         float newDistance = dist[node.getRow()][node.getCol()] + edgeLength;
         if (dist[newRow][newCol] > newDistance) {
@@ -84,12 +85,9 @@ public class JumpPointSearch extends AStar {
 
     // diagonal jumps
     if (deltaRow != 0 && deltaCol != 0) {
-      if (isBlocked(row + deltaRow, col) || isBlocked(row, col + deltaCol)) {
-        return node;
-      }
       // scan vertically and horizontally for jump points
-      if (jump(new Node(row + deltaRow, col, node), deltaRow, 0) != null
-              || jump(new Node(row, col + deltaCol, node), 0, deltaCol) != null) {
+      if (jump(new Node(row + deltaRow, col, null), deltaRow, 0) != null
+              || jump(new Node(row, col + deltaCol, null), 0, deltaCol) != null) {
         return node;
       }
     } else {
@@ -111,11 +109,19 @@ public class JumpPointSearch extends AStar {
         }
       }
     }
-    Node next = new Node(row + deltaRow, col + deltaCol, node.getPrevious());
+
+    if (isBlocked(row + deltaRow, col) || isBlocked(row, col + deltaCol)) {
+      return node;
+    }
+
+    Node next = new Node(row + deltaRow, col + deltaCol, null);
     return jump(next, deltaRow, deltaCol);
   }
 
-  protected Node[] identifySuccessors(Node node) {
+  /*
+   * Finds jump points.
+   */
+  private Node[] identifySuccessors(Node node) {
     Node[] successors = new Node[8];
     int i = 0;
     for (Node neighbor : getNeighbors(node)) {
