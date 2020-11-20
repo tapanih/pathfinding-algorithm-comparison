@@ -105,7 +105,7 @@ public class JumpPointSearch extends AStar {
     }
 
     if (isBlocked(row + deltaRow, col) || isBlocked(row, col + deltaCol)) {
-      return node;
+      return null;
     }
 
     Node next = new Node(row + deltaRow, col + deltaCol, node.getPrevious());

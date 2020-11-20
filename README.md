@@ -5,7 +5,11 @@
 
 ## Documentation
 
-[Specifications](documentation/specification.md)
+[Specification](documentation/specification.md)
+
+[Implementation](documentation/implementation.md)
+
+[Testing](documentation/testing.md)
 
 ### Weekly reports
 
@@ -14,3 +18,5 @@
 [Week 2](documentation/weekly_report_2.md)
 
 [Week 3](documentation/weekly_report_3.md)
+
+[Week 4](documentation/weekly_report_4.md)
