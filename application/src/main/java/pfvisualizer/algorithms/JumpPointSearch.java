@@ -1,14 +1,14 @@
 package pfvisualizer.algorithms;
 
+import java.util.Arrays;
 import pfvisualizer.data.BinaryHeap;
 import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
-import java.util.Arrays;
-
 public class JumpPointSearch extends AStar {
   private Node end;
+  private int[][] map;
 
   @Override
   public Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow) {
@@ -26,7 +26,7 @@ public class JumpPointSearch extends AStar {
       }
     }
 
-    int[][] map = new int[height][width];
+    this.map = new int[height][width];
     for (int row = 0; row < height; row++) {
       System.arraycopy(grid[row], 0, map[row], 0, width);
     }
@@ -42,17 +42,11 @@ public class JumpPointSearch extends AStar {
         return new Result(map, node.getHeuristic());
       }
 
-      // loop through all the neighbors
+      // loop through all the generated jump points
       for (Node neighbor : identifySuccessors(node)) {
-        System.out.println("jump point: " + neighbor);
 
         int newRow = neighbor.getRow();
         int newCol = neighbor.getCol();
-
-        // check that the square is passable and unvisited
-        if (map[newRow][newCol] != UNVISITED) {
-          continue;
-        }
 
         int rowDist = Math.abs(neighbor.getRow() - node.getRow());
         int colDist = Math.abs(neighbor.getCol() - node.getCol());
@@ -96,7 +90,7 @@ public class JumpPointSearch extends AStar {
         if (!isBlocked(row + 1, col) && isBlocked(row + 1, col - deltaCol)) {
           return node;
         }
-        if (isBlocked(row - 1, col) && isBlocked(row - 1, col - deltaCol)) {
+        if (!isBlocked(row - 1, col) && isBlocked(row - 1, col - deltaCol)) {
           return node;
         }
         // vertical jumps
@@ -114,7 +108,7 @@ public class JumpPointSearch extends AStar {
       return node;
     }
 
-    Node next = new Node(row + deltaRow, col + deltaCol, null);
+    Node next = new Node(row + deltaRow, col + deltaCol, node.getPrevious());
     return jump(next, deltaRow, deltaCol);
   }
 
@@ -129,7 +123,7 @@ public class JumpPointSearch extends AStar {
       int deltaRow = neighbor.getRow() - node.getRow();
       int deltaCol = neighbor.getCol() - node.getCol();
       Node jumpNode = jump(neighbor, deltaRow, deltaCol);
-      if (jumpNode != null) {
+      if (jumpNode != null && map[jumpNode.getRow()][jumpNode.getCol()] == UNVISITED) {
         successors[i++] = jumpNode;
       }
     }
@@ -138,66 +132,118 @@ public class JumpPointSearch extends AStar {
 
   @Override
   protected Node[] getNeighbors(Node node) {
-    return super.getNeighbors(node);
-    /*
+    Node parent = node.getPrevious();
+
+    // return all neighbors if there is no parent
+    if (parent == null) {
+      return super.getNeighbors(node);
+    }
+
     Node[] neighbors = new Node[5];
     int row = node.getRow();
     int col = node.getCol();
+
+    // the parent might not be adjacent so normalize to -1, 1 or 0
     int deltaRow = (row - parent.getRow()) / Math.max(Math.abs(row - parent.getRow()), 1);
     int deltaCol = (col - parent.getCol()) / Math.max(Math.abs(col - parent.getCol()), 1);
-    System.out.println(node + ", " + deltaRow + " " + deltaCol);
-    // diagonals
+
     int i = 0;
+
+    /*
+     If the parent (p) is a diagonal neighbor, we can discard neighbors of the current square (c)
+     marked with # because those can be reached quicker from the parent. This means, we only need
+     to process neighbours marked with x.
+
+          #xx
+          #cx
+          p##
+    */
     if (deltaRow != 0 && deltaCol != 0) {
       if (!isBlocked(row + deltaRow, col)) {
-        neighbors[i++] = new Node(row + deltaRow, col, null);
+        neighbors[i++] = new Node(row + deltaRow, col, node);
       }
       if (!isBlocked(row, col + deltaCol)) {
-        neighbors[i++] = new Node(row, col + deltaCol, null);
+        neighbors[i++] = new Node(row, col + deltaCol, node);
       }
+
+      // add the diagonal opposite of parent if it is walkable and we are not cutting corners
       if (!isBlocked(row + deltaRow, col + deltaCol)
           && !isBlocked(row + deltaRow, col) && !isBlocked(row, col + deltaCol)) {
-        neighbors[i++] = new Node(row + deltaRow, col + deltaCol, null);
-      }
-      // forced neighbors
-      if (isBlocked(row - deltaRow, col) && !isBlocked(row - deltaRow, col + deltaCol)
-              && !isBlocked(row, col + deltaCol)) {
-        neighbors[i++] = new Node(row - deltaRow, col + deltaCol, null);
-      }
-      if (isBlocked(row, col - deltaCol) && !isBlocked(row + deltaRow, col - deltaCol)
-              && !isBlocked(row + deltaRow, col)) {
-        neighbors[i++] = new Node(row + deltaRow, col - deltaCol, null);
+        neighbors[i++] = new Node(row + deltaRow, col + deltaCol, node);
       }
     } else {
-      // horizontal
-      if (deltaRow == 0 && !isBlocked(row, col + deltaCol)) {
+      /*
+       if the parent is vertical neighbor, we can discard neighbors of the current square (c)
+       marked with # because those can be reached quicker from the parent. This means, we only need
+       to process neighbours marked with x.
 
-        neighbors[i++] = new Node(row, col + deltaCol, null);
+           #xx
+           pcx
+           #xx
+      */
+      if (deltaRow == 0) {
+        boolean nextBlocked = isBlocked(row, col + deltaCol);
 
-        // forced neighbors
-        if (isBlocked(row + 1, col) && !isBlocked(row + 1, col + deltaCol)) {
-          neighbors[i++] = new Node(row + 1, col + deltaCol, null);
+        // add the neighbor opposite of parent if it is walkable
+        if (!nextBlocked) {
+          neighbors[i++] = new Node(row, col + deltaCol, node);
         }
-        if (isBlocked(row - 1, col) && !isBlocked(row - 1, col + deltaCol)) {
-          neighbors[i++] = new Node(row - 1, col + deltaCol, null);
-        }
-        // vertical
-      } else if (!isBlocked(row + deltaRow, col)) {
 
-        neighbors[i++] = new Node(row + deltaRow, col, null);
-
-        // forced neighbors
-        if (isBlocked(row, col + 1) && !isBlocked(row + deltaRow, col + 1)) {
-          neighbors[i++] = new Node(row + deltaRow, col + 1, null);
+        // add the bottom neighbor if it is walkable
+        if (!isBlocked(row + 1, col)) {
+          neighbors[i++] = new Node(row + 1, col, node);
+          // add the diagonal if the bottom neighbor and the left/right neighbor are walkable
+          if (!nextBlocked) {
+            neighbors[i++] = new Node(row + 1, col + deltaCol, node);
+          }
         }
-        if (isBlocked(row, col - 1) && !isBlocked(row + deltaRow, col - 1)) {
-          neighbors[i++] = new Node(row + deltaRow, col - 1, null);
+
+        // add the top neighbor if it is walkable
+        if (!isBlocked(row - 1, col)) {
+          neighbors[i++] = new Node(row - 1, col, node);
+          // add the diagonal if the bottom neighbor and the left/right neighbor are walkable
+          if (!nextBlocked) {
+            neighbors[i++] = new Node(row - 1, col + deltaCol, node);
+          }
+        }
+
+        /*
+         if the parent is horizontal neighbor, we can discard neighbors of the current square (c)
+         marked with # because those can be reached quicker from the parent. This means, we only
+         need to process neighbours marked with x.
+
+             #p#
+             xcx
+             xxx
+        */
+      } else {
+        boolean nextBlocked = isBlocked(row + deltaRow, col);
+
+        // add the neighbor opposite of parent if it is walkable
+        if (!nextBlocked) {
+          neighbors[i++] = new Node(row + deltaRow, col, node);
+        }
+
+        // add the right neighbor if it is walkable
+        if (!isBlocked(row, col + 1)) {
+          neighbors[i++] = new Node(row, col + 1, node);
+          // add the diagonal if the right neighbor and the top/bottom neighbor are walkable
+          if (!nextBlocked) {
+            neighbors[i++] = new Node(row + deltaRow, col + 1, node);
+          }
+        }
+
+        // add the top neighbor if it is walkable
+        if (!isBlocked(row, col - 1)) {
+          neighbors[i++] = new Node(row, col - 1, node);
+          // add the diagonal if the left neighbor and the top/bottom neighbor are walkable
+          if (!nextBlocked) {
+            neighbors[i++] = new Node(row + deltaRow, col - 1, node);
+          }
         }
       }
     }
-    System.out.println(i);
+
     return Arrays.copyOf(neighbors, i);
-  }
-     */
   }
 }

@@ -39,7 +39,7 @@ public class JumpPointSearchTest {
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
-   JumpPointSearch jps = new JumpPointSearch();
+    JumpPointSearch jps = new JumpPointSearch();
     Result result = jps.search(map, 1, 1, 4, 3);
     assertEquals(11.8284f, result.getDistance(), delta);
   }

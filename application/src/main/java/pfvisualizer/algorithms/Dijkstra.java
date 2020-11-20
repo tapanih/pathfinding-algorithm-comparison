@@ -1,11 +1,10 @@
 package pfvisualizer.algorithms;
 
+import java.util.Arrays;
 import pfvisualizer.data.BinaryHeap;
 import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
-
-import java.util.Arrays;
 
 public class Dijkstra implements Pathfinder {
   protected int height;
