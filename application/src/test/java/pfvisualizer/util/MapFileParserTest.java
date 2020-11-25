@@ -10,8 +10,8 @@ public class MapFileParserTest {
 
   @Test
   public void mapIsParsedCorrectly() throws IOException {
-    File mapFile = new File("src/test/resources/maps/test.map");
-    int[][] map = MapFileParser.parse(mapFile.getAbsolutePath());
+    File file = new File("src/test/resources/maps/test.map");
+    int[][] map = MapFileParser.parse(file);
     int[][] mapCorrect = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},

@@ -1,6 +1,7 @@
 package pfvisualizer.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -13,12 +14,12 @@ public class MapFileParser {
   /**
    * Parses the map file given as the argument.
    *
-   * @param fileName The map file
+   * @param file The map file
    * @return the map as a 2d int array where 0 indicates
    *     the square is passable and 1 means it is not
    */
-  public static int[][] parse(String fileName) throws IOException { //TODO: handle exceptions better
-    BufferedReader br = new BufferedReader(new FileReader(fileName));
+  public static int[][] parse(File file) throws IOException { //TODO: handle exceptions better
+    BufferedReader br = new BufferedReader(new FileReader(file));
     br.readLine(); // type octile
     String[] parts = br.readLine().split(" "); // height y
     int height = Integer.parseInt(parts[1]);

@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'checkstyle'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 repositories {
@@ -20,7 +21,12 @@ dependencies {
     checkstyleConfig("com.puppycrawl.tools:checkstyle:8.32") { transitive = false }
 }
 
-mainClassName = 'pfvisualizer.main.Main'
+mainClassName = 'pfvisualizer.ui.Main'
+
+javafx {
+    version = "12.0.2"
+    modules = [ 'javafx.controls' ]
+}
 
 jacocoTestReport {
     reports {
@@ -29,7 +35,7 @@ jacocoTestReport {
     }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['pfvisualizer/main/**'])
+            fileTree(dir: it, exclude: ['pfvisualizer/ui/**'])
         }))
     }
 }
