@@ -24,7 +24,7 @@ import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.algorithms.JumpPointSearch;
 import pfvisualizer.algorithms.Pathfinder;
-import pfvisualizer.util.MapFileParser;
+import pfvisualizer.util.Parser;
 import pfvisualizer.util.Result;
 
 public class App extends Application {
@@ -84,7 +84,7 @@ public class App extends Application {
         return;
       }
       try {
-        this.map = MapFileParser.parse(file);
+        this.map = Parser.parseMap(file);
         startIsPlaced = false;
         drawMapOnCanvas(map);
         distanceLabel.setText("");
