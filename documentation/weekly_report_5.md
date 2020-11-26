@@ -1,6 +1,6 @@
 ## Week 5
 
-Work time: 5 hours
+Work time: 13 hours
 
 This week I created a graphical user interface using JavaFX. I had set up JavaFX for our team's software engineering course mini project so that was quite painless. I learned that creating 25000 buttons is not a good idea so I switched to using JavaFX Canvas. JavafX Canvas was already familiar to me from my Software Development Methods project. I spent a bit too much time on improving the user interface but I am quite happy with the result.
 
