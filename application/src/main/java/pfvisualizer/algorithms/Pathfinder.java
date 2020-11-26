@@ -6,8 +6,9 @@ import pfvisualizer.util.Result;
 public interface Pathfinder {
   int UNVISITED = 0;
   int WALL = 1;
-  int VISITED = 2;
-  int PATH = 4;
+  int VISITED = 2;    // nodes added to the heap
+  int CHECKED = 3;    // nodes checked by JPS but not added to the heap (processed fast)
+  int PATH = 4;       // nodes that form the optimal path
   float STRAIGHT_DISTANCE = 1;
   float DIAGONAL_DISTANCE = 1.41421356237f; // sqrt(2)
 

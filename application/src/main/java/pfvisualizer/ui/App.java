@@ -149,6 +149,8 @@ public class App extends Application {
           writer.setColor(col, row, Color.BLACK);
         } else if (map[row][col] == 2) {
           writer.setColor(col, row, Color.GREEN);
+        } else if (map[row][col] == 3) {
+          writer.setColor(col, row, Color.LIGHTGREEN);
         } else {
           writer.setColor(col, row, Color.RED);
         }

@@ -6,6 +6,40 @@ import pfvisualizer.util.Node;
 public class JumpPointSearch extends AStar {
 
   @Override
+  public void buildPath(Node node, int[][] map) {
+    while (node.getPrevious() != null) {
+      Node prev = node.getPrevious();
+      drawLine(node.getRow(), node.getCol(), prev.getRow(), prev.getCol());
+      node = prev;
+    }
+  }
+
+  // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+  private void drawLine(int x0, int y0, int x1, int y1) {
+    int dx = Math.abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -Math.abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy;
+
+    while (true) {
+      map[x0][y0] = PATH;
+      if (x0 == x1 && y0 == y1) {
+        break;
+      }
+      int e2 = 2 * err;
+      if (e2 >= dy) {
+        err += dy;
+        x0 += sx;
+      }
+      if (e2 <= dx) {
+        err += dx;
+        y0 += sy;
+      }
+    }
+  }
+
+  @Override
   protected float getDistanceBetween(Node first, Node second) {
     int rowDist = Math.abs(first.getRow() - second.getRow());
     int colDist = Math.abs(first.getCol() - second.getCol());
@@ -26,7 +60,7 @@ public class JumpPointSearch extends AStar {
       int deltaRow = neighbor.getRow() - node.getRow();
       int deltaCol = neighbor.getCol() - node.getCol();
       Node jumpNode = jump(neighbor, deltaRow, deltaCol);
-      if (jumpNode != null && map[jumpNode.getRow()][jumpNode.getCol()] == UNVISITED) {
+      if (jumpNode != null && map[jumpNode.getRow()][jumpNode.getCol()] != VISITED) {
         successors[i++] = jumpNode;
       }
     }
@@ -45,6 +79,8 @@ public class JumpPointSearch extends AStar {
     if (isBlocked(row, col)) {
       return null;
     }
+
+    if (map[row][col] != VISITED) map[row][col] = CHECKED;
 
     if (col == end.getCol() && row == end.getRow()) {
       return node;
