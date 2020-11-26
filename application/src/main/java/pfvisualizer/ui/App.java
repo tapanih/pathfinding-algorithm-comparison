@@ -38,6 +38,8 @@ public class App extends Application {
   private final BorderPane root = new BorderPane();
   private final BorderPane canvasHolder = new BorderPane();
   private final VBox menu = new VBox();
+  private final Label distanceLabel = new Label("");
+  private final Label timeLabel = new Label("");
   private final Dijkstra dijkstra = new Dijkstra();
   private final AStar astar = new AStar();
   private final JumpPointSearch jps = new JumpPointSearch();
@@ -85,6 +87,7 @@ public class App extends Application {
         this.map = MapFileParser.parse(file);
         startIsPlaced = false;
         drawMapOnCanvas(map);
+        distanceLabel.setText("");
 
       } catch (IOException ioException) {
         new Alert(Alert.AlertType.ERROR, "map file could not be opened").show();
@@ -94,29 +97,22 @@ public class App extends Application {
     canvas.setOnMouseClicked(event -> {
       int col = (int) event.getX();
       int row = (int) event.getY();
-
-      if (startIsPlaced) {
-        endRow = row;
-        endCol = col;
-        Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
-        if (result != null) {
-          drawMapOnCanvas(result.getMap());
-          pathIsDrawn = true;
-        }
-        startIsPlaced = false;
-      } else {
-        startRow = row;
-        startCol = col;
-        startIsPlaced = true;
-      }
+      placeStartOrEndNode(col, row);
     });
 
     final Separator separator = new Separator();
+    separator.setStyle("-fx-padding: 0 0 5 0;");
     final Separator separator2 = new Separator();
+    separator2.setStyle("-fx-padding: 0 0 5 0;");
+    final Separator separator3 = new Separator();
+    separator3.setStyle("-fx-padding: 0 0 5 0;");
 
     final Label legendLabel = new Label("Legend:");
+    legendLabel.setStyle("-fx-padding: 5 0 2 5;");
     final GridPane legendPane = createLegend();
 
+    final Label algorithmLabel = new Label("Algorithm:");
+    algorithmLabel.setStyle("-fx-padding: 5 0 2 5;");
     final ToggleButton dijkstraButton = new RadioButton();
     dijkstraButton.setText("Dijkstra");
     dijkstraButton.setSelected(true);
@@ -131,12 +127,38 @@ public class App extends Application {
     final ToggleGroup toggleGroup = new ToggleGroup();
     toggleGroup.getToggles().addAll(dijkstraButton, astarButton, jpsButton);
 
-    menu.getChildren().addAll(openFileButton, separator, dijkstraButton, astarButton, jpsButton,
-        separator2, legendLabel, legendPane);
+    Label infoLabel = new Label("Info:");
+    infoLabel.setStyle("-fx-padding: 5 0 2 5;");
+
+    menu.getChildren().addAll(openFileButton, algorithmLabel, separator, dijkstraButton,
+        astarButton, jpsButton, legendLabel, separator2, legendPane, infoLabel, separator3,
+        distanceLabel, timeLabel);
 
     Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
     primaryStage.setScene(scene);
     primaryStage.show();
+  }
+
+  private void placeStartOrEndNode(int col, int row) {
+    if (startIsPlaced) {
+      endRow = row;
+      endCol = col;
+      Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
+      if (result != null) {
+        updateMapAndInfoBar(result);
+        pathIsDrawn = true;
+      }
+      startIsPlaced = false;
+    } else {
+      startRow = row;
+      startCol = col;
+      startIsPlaced = true;
+    }
+  }
+
+  private void updateMapAndInfoBar(Result result) {
+    drawMapOnCanvas(result.getMap());
+    distanceLabel.setText(String.format("Distance: %.2f", result.getDistance()));
   }
 
   private GridPane createLegend() {
@@ -182,7 +204,7 @@ public class App extends Application {
     this.activePathfinder = pathfinder;
     if (pathIsDrawn) {
       Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
-      drawMapOnCanvas(result.getMap());
+      updateMapAndInfoBar(result);
     }
   }
 
