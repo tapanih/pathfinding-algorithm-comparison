@@ -31,13 +31,15 @@ public class App extends Application {
   public static final int WINDOW_WIDTH = 800;
   public static final int WINDOW_HEIGHT = 600;
   public static final int LEGEND_SIZE = 16;
+  public static final int BUTTON_MIN_WIDTH = 124;
 
   private final HashMap<Integer, Color> intToColor = new HashMap<>();
-  private final MapFileChooser mapFileChooser = new MapFileChooser();
+  private final FileChoosers fileChoosers = new FileChoosers();
   private final Canvas canvas = new Canvas();
   private final BorderPane root = new BorderPane();
   private final BorderPane canvasHolder = new BorderPane();
   private final VBox menu = new VBox();
+  private final Label helperLabel = new Label(" Open a map\n to get started.");
   private final Label distanceLabel = new Label("");
   private final Label timeLabel = new Label("");
   private final Dijkstra dijkstra = new Dijkstra();
@@ -75,10 +77,14 @@ public class App extends Application {
     canvas.widthProperty().addListener(event -> setCanvasScale());
 
     Button openFileButton = new Button();
-    openFileButton.setText("Open map file...");
+    openFileButton.setText("Open map...");
+    openFileButton.setMinWidth(BUTTON_MIN_WIDTH);
+    Button openScenarioButton = new Button();
+    openScenarioButton.setText("Open scenario...");
+    openScenarioButton.setMinWidth(BUTTON_MIN_WIDTH);
 
-    openFileButton.setOnAction(e -> {
-      File file = mapFileChooser.showOpenMapDialog(primaryStage);
+    openFileButton.setOnAction(event -> {
+      File file = fileChoosers.showOpenMapDialog(primaryStage);
       // user closed the dialog without choosing a file
       if (file == null) {
         return;
@@ -88,9 +94,23 @@ public class App extends Application {
         startIsPlaced = false;
         drawMapOnCanvas(map);
         distanceLabel.setText("");
+        helperLabel.setText(" Click twice\n on the map to set\n start and end\n points.");
 
       } catch (IOException ioException) {
         new Alert(Alert.AlertType.ERROR, "map file could not be opened").show();
+      }
+    });
+
+    openScenarioButton.setOnAction(event -> {
+      File file = fileChoosers.showOpenScenarioDialog(primaryStage);
+      // user closed the dialog without choosing a file
+      if (file == null) {
+        return;
+      }
+      try {
+        new BenchmarkWindow(Parser.parseScenario(file)).show();
+      } catch (IOException e) {
+        new Alert(Alert.AlertType.ERROR, "scenario file could not be opened").show();
       }
     });
 
@@ -105,6 +125,8 @@ public class App extends Application {
     final Separator separator2 = new Separator();
     separator2.setStyle("-fx-padding: 0 0 5 0;");
     final Separator separator3 = new Separator();
+    separator3.setStyle("-fx-padding: 0 0 5 0;");
+    final Separator separator4 = new Separator();
     separator3.setStyle("-fx-padding: 0 0 5 0;");
 
     final Label legendLabel = new Label("Legend:");
@@ -127,12 +149,14 @@ public class App extends Application {
     final ToggleGroup toggleGroup = new ToggleGroup();
     toggleGroup.getToggles().addAll(dijkstraButton, astarButton, jpsButton);
 
-    Label infoLabel = new Label("Info:");
+    final Label infoLabel = new Label("Info:");
     infoLabel.setStyle("-fx-padding: 5 0 2 5;");
+    final Label instructionsLabel = new Label("Instructions:");
+    instructionsLabel.setStyle("-fx-padding: 5 0 2 5;");
 
-    menu.getChildren().addAll(openFileButton, algorithmLabel, separator, dijkstraButton,
-        astarButton, jpsButton, legendLabel, separator2, legendPane, infoLabel, separator3,
-        distanceLabel, timeLabel);
+    menu.getChildren().addAll(openFileButton, openScenarioButton, algorithmLabel, separator,
+        dijkstraButton, astarButton, jpsButton, legendLabel, separator2, legendPane, infoLabel,
+        separator3, distanceLabel, timeLabel, instructionsLabel, separator4, helperLabel);
 
     Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
     primaryStage.setScene(scene);
@@ -144,21 +168,33 @@ public class App extends Application {
       endRow = row;
       endCol = col;
       Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
-      if (result != null) {
+      if (result.isPathFound()) {
         updateMapAndInfoBar(result);
         pathIsDrawn = true;
+        helperLabel.setText(" Good job! You can\n set new start\n and end points \n"
+            + " by clicking\n twice again.");
+      } else {
+        updateMapAndInfoBar(result);
+        helperLabel.setText(" No path\n was found.");
       }
       startIsPlaced = false;
-    } else {
+    } else if (map[row][col] != Pathfinder.WALL) {
+      helperLabel.setText(" Click again\n to set an end\n point.");
       startRow = row;
       startCol = col;
       startIsPlaced = true;
+    } else {
+      helperLabel.setText(" Invalid\n start point.");
     }
   }
 
   private void updateMapAndInfoBar(Result result) {
     drawMapOnCanvas(result.getMap());
-    distanceLabel.setText(String.format("Distance: %.2f", result.getDistance()));
+    if (result.isPathFound()) {
+      distanceLabel.setText(String.format(" Length: %.2f", result.getDistance()));
+    } else {
+      distanceLabel.setText("");
+    }
   }
 
   private GridPane createLegend() {

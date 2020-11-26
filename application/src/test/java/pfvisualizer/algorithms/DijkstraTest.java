@@ -25,7 +25,7 @@ public class DijkstraTest {
   }
 
   @Test
-  public void algorithmReturnsNullIfPathCannotBeFound() {
+  public void algorithmWorksCorrectlyWhenPathCannotBeFound() {
     int[][] map = {
         {0, 0, 0, 0, 0},
         {0, 0, 1, 0, 0},
@@ -34,7 +34,7 @@ public class DijkstraTest {
         {0, 0, 0, 0, 0}
     };
     Result result = algorithm.search(map, 0, 0, 2, 2);
-    assertNull(result);
+    assertFalse(result.isPathFound());
   }
 
   @Test

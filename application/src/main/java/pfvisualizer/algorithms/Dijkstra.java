@@ -48,7 +48,7 @@ public class Dijkstra implements Pathfinder {
       Node node = heap.extractMin();
       if (node.getCol() == end.getCol() && node.getRow() == end.getRow()) {
         buildPath(node, map);
-        return new Result(map, node.getHeuristic());
+        return new Result(map, node.getHeuristic(), true);
       }
       map[node.getRow()][node.getCol()] = VISITED;
 
@@ -68,7 +68,7 @@ public class Dijkstra implements Pathfinder {
         }
       }
     }
-    return null;
+    return new Result(map, -1f, false);
   }
 
   /**
