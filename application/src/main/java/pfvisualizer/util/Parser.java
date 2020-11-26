@@ -34,8 +34,12 @@ public class Parser {
     for (int y = 0; y < height; y++) {
       String st = br.readLine();
       for (int x = 0; x < width; x++) {
-        if (st.charAt(x) == '.' || st.charAt(x) == 'G') {
+        char c = st.charAt(x);
+        if (c == '.' || c == 'G') {
           map[y][x] = Pathfinder.UNVISITED;
+        } else if (c == 'S' || c == 'W') {
+          throw new UnsupportedOperationException("Swamp and water tiles "
+              + "are not currently supported");
         } else {
           map[y][x] = Pathfinder.WALL;
         }
@@ -62,7 +66,8 @@ public class Parser {
         map = fileNameToMap.get(mapFileName);
       } else {
         // look for the map file in the same directory
-        File mapFile = new File(file.toPath().getParent().toString() + "/" + mapFileName);
+        File mapFile = new File(file.toPath().getParent().toString()
+            + File.separator + mapFileName);
         map = parseMap(mapFile);
         fileNameToMap.put(mapFileName, map);
       }
@@ -70,7 +75,7 @@ public class Parser {
       int width = Integer.parseInt(parts[2]);
       int height = Integer.parseInt(parts[3]);
       if (width != map[0].length || height != map.length) {
-        throw new IOException("Scaling map size is not yet supported.");
+        throw new UnsupportedOperationException("Scaling map size is not yet supported.");
       }
 
       int startCol = Integer.parseInt(parts[4]);

@@ -95,9 +95,10 @@ public class App extends Application {
         drawMapOnCanvas(map);
         distanceLabel.setText("");
         helperLabel.setText(" Click twice\n on the map to set\n start and end\n points.");
-
-      } catch (IOException ioException) {
-        new Alert(Alert.AlertType.ERROR, "map file could not be opened").show();
+      } catch (UnsupportedOperationException e) {
+        new Alert(Alert.AlertType.ERROR, "The map contains unsupported features.").show();
+      } catch (IOException e) {
+        new Alert(Alert.AlertType.ERROR, "Map file could not be opened").show();
       }
     });
 

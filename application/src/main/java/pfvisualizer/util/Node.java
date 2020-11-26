@@ -41,11 +41,4 @@ public class Node {
   public void setHeuristic(float heuristic) {
     this.heuristic = heuristic;
   }
-
-  @Override
-  public String toString() {
-    return "Node{(" + getRow() + ", " + getCol() + "), heuristic=" + heuristic
-            + (getPrevious() != null ? (", (" + getPrevious().getRow() + ", "
-            + getPrevious().getCol() + ")") : "") + "}";
-  }
 }
