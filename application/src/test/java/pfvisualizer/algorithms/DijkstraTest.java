@@ -1,17 +1,31 @@
 package pfvisualizer.algorithms;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import org.junit.Before;
 import org.junit.Test;
-import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.util.Result;
+
+import static org.junit.Assert.*;
 
 public class DijkstraTest {
   float delta = 0.001f;
+  Pathfinder algorithm;
+
+  @Before
+  public void initializeAlgorithm() {
+    algorithm = new Dijkstra();
+  }
 
   @Test
-  public void dijkstraReturnsNullIfPathCannotBeFound() {
+  public void pathLengthIsZeroWhenStartAndEndNodesAreEqual() {
+    int[][] map = {{0}};
+    int[][] mapCorrect = {{4}};
+    Result result = algorithm.search(map, 0, 0, 0, 0);
+    assertEquals(0, result.getDistance(), delta);
+    assertArrayEquals(mapCorrect, result.getMap());
+  }
+
+  @Test
+  public void algorithmReturnsNullIfPathCannotBeFound() {
     int[][] map = {
         {0, 0, 0, 0, 0},
         {0, 0, 1, 0, 0},
@@ -19,13 +33,12 @@ public class DijkstraTest {
         {0, 0, 1, 0, 0},
         {0, 0, 0, 0, 0}
     };
-    Dijkstra dijkstra = new Dijkstra();
-    Result result = dijkstra.search(map, 0, 0, 2, 2);
+    Result result = algorithm.search(map, 0, 0, 2, 2);
     assertNull(result);
   }
 
   @Test
-  public void dijkstraFavorsDiagonalMovement() {
+  public void algorithmFavorsDiagonalMovement() {
     int[][] map = {
         {1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 1},
@@ -36,8 +49,7 @@ public class DijkstraTest {
         {1, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1}
     };
-    Dijkstra dijkstra = new Dijkstra();
-    Result result = dijkstra.search(map, 1, 1, 6, 6);
+    Result result = algorithm.search(map, 1, 1, 6, 6);
     assertEquals(7.07106f, result.getDistance(), delta);
   }
 
@@ -53,8 +65,7 @@ public class DijkstraTest {
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
-    Dijkstra dijkstra = new Dijkstra();
-    Result result = dijkstra.search(map, 1, 1, 4, 3);
+    Result result = algorithm.search(map, 1, 1, 4, 3);
     assertEquals(11.8284f, result.getDistance(), delta);
   }
 }

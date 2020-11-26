@@ -81,14 +81,12 @@ public class App extends Application {
       int row = (int) event.getY();
 
       if (startIsPlaced) {
-        if (startRow != row || startCol != col) {
-          endRow = row;
-          endCol = col;
-          Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
-          if (result != null) {
-            drawMapOnCanvas(result.getMap());
-            pathIsDrawn = true;
-          }
+        endRow = row;
+        endCol = col;
+        Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
+        if (result != null) {
+          drawMapOnCanvas(result.getMap());
+          pathIsDrawn = true;
         }
         startIsPlaced = false;
       } else {

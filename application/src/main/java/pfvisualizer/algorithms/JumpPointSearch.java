@@ -12,9 +12,14 @@ public class JumpPointSearch extends AStar {
       drawLine(node.getRow(), node.getCol(), prev.getRow(), prev.getCol());
       node = prev;
     }
+    // this makes sure the "path" is correctly drawn when start and end nodes are equal
+    map[node.getRow()][node.getCol()] = PATH;
   }
 
-  // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+  /**
+   * Draws a line using Bresenham's line algorithm.
+   * https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+   */
   private void drawLine(int x0, int y0, int x1, int y1) {
     int dx = Math.abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
@@ -80,7 +85,9 @@ public class JumpPointSearch extends AStar {
       return null;
     }
 
-    if (map[row][col] != VISITED) map[row][col] = CHECKED;
+    if (map[row][col] != VISITED) {
+      map[row][col] = CHECKED;
+    }
 
     if (col == end.getCol() && row == end.getRow()) {
       return node;
