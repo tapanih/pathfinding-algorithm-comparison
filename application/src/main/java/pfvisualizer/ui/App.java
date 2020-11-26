@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import pfvisualizer.algorithms.AStar;
@@ -28,6 +28,9 @@ public class App extends Application {
 
   private final MapFileChooser mapFileChooser = new MapFileChooser();
   private final Canvas canvas = new Canvas();
+  private final BorderPane root = new BorderPane();
+  private final BorderPane canvasHolder = new BorderPane();
+  private final VBox menu = new VBox();
   private final Dijkstra dijkstra = new Dijkstra();
   private final AStar astar = new AStar();
   private final JumpPointSearch jps = new JumpPointSearch();
@@ -42,11 +45,17 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    BorderPane root = new BorderPane();
-    HBox menu = new HBox();
 
-    root.setTop(menu);
-    root.setCenter(canvas);
+    root.setLeft(menu);
+    root.setCenter(canvasHolder);
+
+    canvas.getGraphicsContext2D().setImageSmoothing(false);
+    canvasHolder.setCenter(canvas);
+
+    canvasHolder.heightProperty().addListener(event -> setCanvasScale());
+    canvasHolder.widthProperty().addListener(event -> setCanvasScale());
+    canvas.heightProperty().addListener(event -> setCanvasScale());
+    canvas.widthProperty().addListener(event -> setCanvasScale());
 
     Button openFileButton = new Button();
     openFileButton.setText("Open map file...");
@@ -72,9 +81,7 @@ public class App extends Application {
       int row = (int) event.getY();
 
       if (startIsPlaced) {
-        if (startRow == row && startCol == col) {
-          startIsPlaced = false;
-        } else {
+        if (startRow != row || startCol != col) {
           endRow = row;
           endCol = col;
           Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
@@ -82,8 +89,8 @@ public class App extends Application {
             drawMapOnCanvas(result.getMap());
             pathIsDrawn = true;
           }
-          startIsPlaced = false;
         }
+        startIsPlaced = false;
       } else {
         startRow = row;
         startCol = col;
@@ -118,6 +125,13 @@ public class App extends Application {
       Result result = activePathfinder.search(map, startCol, startRow, endCol, endRow);
       drawMapOnCanvas(result.getMap());
     }
+  }
+
+  private void setCanvasScale() {
+    double scaleFactor = Math.min(canvasHolder.getHeight() / canvas.getHeight(),
+        canvasHolder.getWidth() / canvas.getWidth());
+    canvas.setScaleY(scaleFactor);
+    canvas.setScaleX(scaleFactor);
   }
 
   private void drawMapOnCanvas(int[][] map) {
