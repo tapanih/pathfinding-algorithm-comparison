@@ -1,6 +1,6 @@
 ## Week 5
 
-Work time: 13 hours
+Work time: 18 hours
 
 This week I created a graphical user interface using JavaFX. I had set up JavaFX for our team's software engineering course mini project so that was quite painless. I learned that creating 25000 buttons is not a good idea so I switched to using JavaFX Canvas. JavafX Canvas was already familiar to me from my Software Development Methods project. I spent a bit too much time on improving the user interface but I am quite happy with the result.
 
@@ -8,5 +8,6 @@ Visualizing Dijkstra and A* was simple because all the visited nodes are added t
 
 I found and fixed a dumb bug where JPS doesn't draw the correct path if start and end nodes are equal.
 
-I also wrote a parser for scenario files.
+I also wrote a parser for scenario files. I also developed a benchmarking utility inside the main program that does benchmarks using the scenario files.
+The benchmarks seem to run slowly even though they are running in a thread separate from the application thread. The first results are also slightly disappointing because Jump Point Search is not running that much faster than the other algorithms. I have read reports about 10x performance gains over A* but currently it is about two times faster.
 
