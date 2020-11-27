@@ -39,6 +39,6 @@ public class ParserTest {
 
     File file = new File("src/test/resources/scenarios/test.map.scen");
     Scenario[] scenarios = Parser.parseScenario(file);
-    assertTrue(scenarios[0].equals(scenariosCorrect[0]));
+    assertArrayEquals(scenarios, scenariosCorrect);
   }
 }
