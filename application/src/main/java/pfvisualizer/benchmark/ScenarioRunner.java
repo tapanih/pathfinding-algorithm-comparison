@@ -5,6 +5,7 @@ import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.algorithms.JumpPointSearch;
 import pfvisualizer.algorithms.Pathfinder;
+import pfvisualizer.io.IO;
 
 public class ScenarioRunner {
   private final IO io;

@@ -2,7 +2,7 @@ package pfvisualizer.ui;
 
 import javafx.application.Platform;
 import javafx.scene.text.Text;
-import pfvisualizer.benchmark.IO;
+import pfvisualizer.io.IO;
 
 public class Console implements IO {
   private final Text console;

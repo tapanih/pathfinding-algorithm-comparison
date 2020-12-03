@@ -1,5 +1,7 @@
 package pfvisualizer.benchmark;
 
+import pfvisualizer.io.IO;
+
 import java.util.ArrayList;
 import java.util.List;
 
