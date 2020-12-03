@@ -24,34 +24,27 @@ public class ScenarioRunner {
    */
   public void run(int iterations) {
 
-    io.print("Benchmarking Dijkstra...");
-    double total = 0;
-    for (Scenario scenario : scenarios) {
-      double result = runWith(dijkstra, scenario, iterations);
-      total += result;
-    }
-    io.print("\nTotal median time: " + total + " ns");
+    double dijkstraTotal = runScenariosWith(dijkstra, "Dijkstra", iterations);
+    double astarTotal = runScenariosWith(astar, "A*", iterations);
+    double jpsTotal = runScenariosWith(jps, "JPS", iterations);
 
-    io.print("\n\nBenchmarking A*...");
-    total = 0;
-    for (Scenario scenario : scenarios) {
-      double result = runWith(astar, scenario, iterations);
-      total += result;
-    }
-    io.print("\nTotal median time: " + total + " ns");
-
-    io.print("\n\nBenchmarking JPS...");
-    total = 0;
-    for (Scenario scenario : scenarios) {
-      double result = runWith(jps, scenario, iterations);
-      total += result;
-    }
-    io.print("\nTotal median time: " + total + " ns\n");
-
-    io.print("End of benchmark.");
+    io.print(String.format("Total median times: \n"
+        + "Dijkstra: %.2f ns\n"
+        + "A*: %.2f ns\n"
+        + "JPS: %.2f ns", dijkstraTotal, astarTotal, jpsTotal));
   }
 
-  private double runWith(Pathfinder algorithm, Scenario scenario, int iterations) {
+  private double runScenariosWith(Pathfinder algorithm, String algorithmName, int iterations) {
+    double total = 0;
+    for (int i = 0; i < scenarios.length; i++) {
+      double result = runScenarioWith(algorithm, scenarios[i], iterations);
+      total += result;
+      io.print("Benchmarking " + algorithmName + "... [" + i + "/" + scenarios.length + "]");
+    }
+    return total;
+  }
+
+  private double runScenarioWith(Pathfinder algorithm, Scenario scenario, int iterations) {
     algorithm.search(scenario.getMap(), scenario.getStartCol(), scenario.getStartRow(),
         scenario.getEndCol(), scenario.getEndRow());
     long[] times = new long[iterations];

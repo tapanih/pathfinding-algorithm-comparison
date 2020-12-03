@@ -12,6 +12,6 @@ public class TestIO implements IO {
   }
 
   public boolean contains(String text) {
-    return output.contains(text);
+    return output.stream().anyMatch(line -> line.contains(text));
   }
 }

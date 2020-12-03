@@ -1,18 +1,18 @@
 package pfvisualizer.ui;
 
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 import pfvisualizer.benchmark.IO;
 
 public class Console implements IO {
-  private final TextArea console;
+  private final Text console;
 
-  public Console(TextArea console) {
+  public Console(Text console) {
     this.console = console;
   }
 
   @Override
   public void print(String text) {
-    Platform.runLater(() -> console.appendText(text));
+    Platform.runLater(() -> console.setText(text));
   }
 }

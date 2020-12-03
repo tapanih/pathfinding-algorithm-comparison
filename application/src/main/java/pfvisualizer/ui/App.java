@@ -160,6 +160,7 @@ public class App extends Application {
         separator3, distanceLabel, timeLabel, instructionsLabel, separator4, helperLabel);
 
     Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+    primaryStage.setTitle("Pathfinding visualizer");
     primaryStage.setScene(scene);
     primaryStage.show();
   }

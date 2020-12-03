@@ -22,6 +22,6 @@ public class ScenarioRunnerTest {
     Scenario[] scenarios = Parser.parseScenario(file);
     ScenarioRunner runner = new ScenarioRunner(scenarios, io);
     runner.run(10);
-    assertTrue(io.contains("End of benchmark."));
+    assertTrue(io.contains("Total median times:"));
   }
 }
