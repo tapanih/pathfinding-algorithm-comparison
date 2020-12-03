@@ -1,6 +1,9 @@
 package pfvisualizer.algorithms;
 
-import java.util.Arrays;
+import static pfvisualizer.util.Utils.arrayCopyOf;
+import static pfvisualizer.util.Utils.copy2dArray;
+import static pfvisualizer.util.Utils.initialize2dArray;
+
 import pfvisualizer.data.BinaryHeap;
 import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
@@ -28,17 +31,8 @@ public class Dijkstra implements Pathfinder {
     height = grid.length;
     width = grid[0].length;
 
-    float[][] dist = new float[height][width];
-    for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        dist[row][col] = Float.POSITIVE_INFINITY;
-      }
-    }
-
-    this.map = new int[height][width];
-    for (int row = 0; row < height; row++) {
-      System.arraycopy(grid[row], 0, map[row], 0, width);
-    }
+    float[][] dist = initialize2dArray(width, height, Float.POSITIVE_INFINITY);
+    this.map = copy2dArray(width, height, grid);
 
     dist[start.getRow()][start.getCol()] = 0;
 
@@ -108,7 +102,7 @@ public class Dijkstra implements Pathfinder {
 
       neighbors[i++] = new Node(node.getRow() + deltaRow, node.getCol() + deltaCol, node);
     }
-    return Arrays.copyOf(neighbors, i);
+    return arrayCopyOf(neighbors, i);
   }
 
   protected boolean isBlocked(int row, int col) {

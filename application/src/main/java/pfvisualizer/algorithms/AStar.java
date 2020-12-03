@@ -3,6 +3,7 @@ package pfvisualizer.algorithms;
 import pfvisualizer.util.Node;
 
 public class AStar extends Dijkstra {
+
   @Override
   protected float heuristic(Node node, Node end) {
     // difference in vertical direction
@@ -13,6 +14,7 @@ public class AStar extends Dijkstra {
     int deltaRow = node.getRow() - end.getRow();
     deltaRow = (deltaRow > 0) ? deltaRow : -deltaRow;
 
+    // move diagonally as much as possible before moving straight
     int diagonalMoves = (deltaCol < deltaRow) ? deltaCol : deltaRow;
     int straightMoves = (deltaCol > deltaRow) ? (deltaCol - deltaRow) : (deltaRow - deltaCol);
     return STRAIGHT_DISTANCE * straightMoves + DIAGONAL_DISTANCE * diagonalMoves;

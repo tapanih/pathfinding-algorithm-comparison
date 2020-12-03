@@ -1,6 +1,7 @@
 package pfvisualizer.algorithms;
 
-import java.util.Arrays;
+import static pfvisualizer.util.Utils.arrayCopyOf;
+
 import pfvisualizer.util.Node;
 
 public class JumpPointSearch extends AStar {
@@ -21,9 +22,9 @@ public class JumpPointSearch extends AStar {
    * https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
    */
   private void drawLine(int x0, int y0, int x1, int y1) {
-    int dx = Math.abs(x1 - x0);
+    int dx = (x1 > x0) ? x1 - x0 : x0 - x1;
     int sx = x0 < x1 ? 1 : -1;
-    int dy = -Math.abs(y1 - y0);
+    int dy = (y1 < y0) ? y1 - y0 : y0 - y1;
     int sy = y0 < y1 ? 1 : -1;
     int err = dx + dy;
 
@@ -46,11 +47,18 @@ public class JumpPointSearch extends AStar {
 
   @Override
   protected float getDistanceBetween(Node first, Node second) {
-    int rowDist = Math.abs(first.getRow() - second.getRow());
-    int colDist = Math.abs(first.getCol() - second.getCol());
+    int rowDist = (first.getRow() > second.getRow())
+        ? first.getRow() - second.getRow()
+        : second.getRow() - first.getRow();
 
-    return STRAIGHT_DISTANCE * Math.abs(rowDist - colDist)
-        + DIAGONAL_DISTANCE * Math.min(rowDist, colDist);
+    int colDist = (first.getCol() > second.getCol())
+        ? first.getCol() - second.getCol()
+        : second.getCol() - first.getCol();
+
+    int straightDist = (rowDist > colDist) ? rowDist - colDist : colDist - rowDist;
+    int diagonalDist = (rowDist < colDist) ? rowDist : colDist;
+
+    return STRAIGHT_DISTANCE * straightDist + DIAGONAL_DISTANCE * diagonalDist;
   }
 
   /**
@@ -69,7 +77,7 @@ public class JumpPointSearch extends AStar {
         successors[i++] = jumpNode;
       }
     }
-    return Arrays.copyOf(successors, i);
+    return arrayCopyOf(successors, i);
   }
 
   /**
@@ -145,8 +153,10 @@ public class JumpPointSearch extends AStar {
     int col = node.getCol();
 
     // the parent might not be adjacent so normalize to -1, 1 or 0
-    int deltaRow = (row - parent.getRow()) / Math.max(Math.abs(row - parent.getRow()), 1);
-    int deltaCol = (col - parent.getCol()) / Math.max(Math.abs(col - parent.getCol()), 1);
+    int rowDiff = (row > parent.getRow()) ? row - parent.getRow() : parent.getRow() - row;
+    int colDiff = (col > parent.getCol()) ? col - parent.getCol() : parent.getCol() - col;
+    int deltaRow = (row - parent.getRow()) / ((rowDiff > 0) ? rowDiff : 1);
+    int deltaCol = (col - parent.getCol()) / ((colDiff > 0) ? colDiff : 1);
 
     int i = 0;
 
@@ -245,6 +255,6 @@ public class JumpPointSearch extends AStar {
       }
     }
 
-    return Arrays.copyOf(neighbors, i);
+    return arrayCopyOf(neighbors, i);
   }
 }
