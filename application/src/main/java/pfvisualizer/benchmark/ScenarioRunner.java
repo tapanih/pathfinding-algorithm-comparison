@@ -1,11 +1,13 @@
 package pfvisualizer.benchmark;
 
 import java.util.Arrays;
+import javafx.scene.chart.XYChart;
 import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.algorithms.JumpPointSearch;
 import pfvisualizer.algorithms.Pathfinder;
 import pfvisualizer.io.IO;
+import pfvisualizer.util.Result;
 
 public class ScenarioRunner {
   private final IO io;
@@ -13,48 +15,67 @@ public class ScenarioRunner {
   private final Pathfinder astar = new AStar();
   private final Pathfinder jps = new JumpPointSearch();
   private final Scenario[] scenarios;
+  private final int iterations;
 
-  public ScenarioRunner(Scenario[] scenarios, IO io) {
+  /**
+   * Performs benchmarking.
+   *
+   * @param scenarios scenarios used for benchmarking
+   * @param io        io used for printing progress notifications
+   * @param iterations iterations per scenario
+   */
+  public ScenarioRunner(Scenario[] scenarios, IO io, int iterations) {
     this.scenarios = scenarios;
     this.io = io;
+    this.iterations = iterations;
   }
 
   /**
-   * Runs benchmarks with all the pathfinding algorithms and prints results to IO.
-   * @param iterations number of iterations per scenario
+   * Runs benchmarks with all the pathfinding algorithms, prints progress notifications to IO
+   * and returns the results.
+   *
+   * @return benchmark results
    */
-  public void run(int iterations) {
+  public BenchmarkResults run() {
+    BenchmarkResults results = new BenchmarkResults();
 
-    double dijkstraTotal = runScenariosWith(dijkstra, "Dijkstra", iterations);
-    double astarTotal = runScenariosWith(astar, "A*", iterations);
-    double jpsTotal = runScenariosWith(jps, "JPS", iterations);
+    runScenariosWith(dijkstra, "Dijkstra", results);
+    runScenariosWith(astar, "A*", results);
+    runScenariosWith(jps, "JPS", results);
 
-    io.print(String.format("Total median times: \n"
-        + "Dijkstra: %.2f ns\n"
-        + "A*: %.2f ns\n"
-        + "JPS: %.2f ns", dijkstraTotal, astarTotal, jpsTotal));
+    return results;
   }
 
-  private double runScenariosWith(Pathfinder algorithm, String algorithmName, int iterations) {
+  private void runScenariosWith(Pathfinder algorithm, String algorithmName,
+                                BenchmarkResults results) {
+    XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    series.setName(algorithmName);
     double total = 0;
     for (int i = 0; i < scenarios.length; i++) {
-      double result = runScenarioWith(algorithm, scenarios[i], iterations);
+      double result = runScenarioWith(algorithm, scenarios[i]);
       total += result;
+      series.getData().add(new XYChart.Data<>(scenarios[i].getExpectedDistance(), result));
       io.print("Benchmarking " + algorithmName + "... [" + i + "/" + scenarios.length + "]");
     }
-    return total;
+    results.getSeriesList().add(series);
+    results.getTotals().add(total);
   }
 
-  private double runScenarioWith(Pathfinder algorithm, Scenario scenario, int iterations) {
+  private double runScenarioWith(Pathfinder algorithm, Scenario scenario) {
     algorithm.search(scenario.getMap(), scenario.getStartCol(), scenario.getStartRow(),
         scenario.getEndCol(), scenario.getEndRow());
     long[] times = new long[iterations];
     long time;
     for (int i = 0; i < iterations; i++) {
       time = System.nanoTime();
-      algorithm.search(scenario.getMap(), scenario.getStartCol(),
+      Result result = algorithm.search(scenario.getMap(), scenario.getStartCol(),
           scenario.getStartRow(), scenario.getEndCol(), scenario.getEndRow());
       time = System.nanoTime() - time;
+
+      // throw an exception if path found differs from expected
+      if (Math.abs(result.getDistance() - scenario.getExpectedDistance()) > 0.1) {
+        throw new RuntimeException();
+      }
       times[i] = time;
     }
     Arrays.sort(times);

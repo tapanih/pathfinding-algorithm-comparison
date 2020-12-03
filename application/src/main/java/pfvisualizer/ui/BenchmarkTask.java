@@ -1,10 +1,10 @@
 package pfvisualizer.ui;
 
 import javafx.concurrent.Task;
+import pfvisualizer.benchmark.BenchmarkResults;
 import pfvisualizer.benchmark.ScenarioRunner;
 
-public class BenchmarkTask extends Task<Void> {
-  private static final int ITERATION_COUNT = 10;
+public class BenchmarkTask extends Task<BenchmarkResults> {
   private final ScenarioRunner runner;
 
   public BenchmarkTask(ScenarioRunner runner) {
@@ -12,8 +12,7 @@ public class BenchmarkTask extends Task<Void> {
   }
 
   @Override
-  protected Void call() {
-    runner.run(ITERATION_COUNT);
-    return null;
+  protected BenchmarkResults call() {
+    return runner.run();
   }
 }
