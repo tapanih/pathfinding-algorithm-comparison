@@ -1,4 +1,4 @@
-package pfvisualizer.util;
+package pfvisualizer.io;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import pfvisualizer.algorithms.Pathfinder;
+import pfvisualizer.benchmark.Scenario;
 
 /**
  * A class for parsing map and scenario files that are using the Moving AI Labs format:

@@ -2,7 +2,7 @@ package pfvisualizer.ui;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
-import pfvisualizer.util.IO;
+import pfvisualizer.benchmark.IO;
 
 public class Console implements IO {
   private final TextArea console;

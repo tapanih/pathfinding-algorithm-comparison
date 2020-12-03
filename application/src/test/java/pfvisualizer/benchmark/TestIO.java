@@ -1,4 +1,4 @@
-package pfvisualizer.util;
+package pfvisualizer.benchmark;
 
 import java.util.ArrayList;
 import java.util.List;

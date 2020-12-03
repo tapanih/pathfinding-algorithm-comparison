@@ -1,11 +1,11 @@
-package pfvisualizer.util;
+package pfvisualizer.io;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
+import pfvisualizer.benchmark.Scenario;
 
 public class ParserTest {
 

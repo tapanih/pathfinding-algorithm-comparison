@@ -1,4 +1,4 @@
-package pfvisualizer.util;
+package pfvisualizer.benchmark;
 
 import java.util.Arrays;
 import pfvisualizer.algorithms.AStar;

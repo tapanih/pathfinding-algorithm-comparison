@@ -24,7 +24,7 @@ import pfvisualizer.algorithms.AStar;
 import pfvisualizer.algorithms.Dijkstra;
 import pfvisualizer.algorithms.JumpPointSearch;
 import pfvisualizer.algorithms.Pathfinder;
-import pfvisualizer.util.Parser;
+import pfvisualizer.io.Parser;
 import pfvisualizer.util.Result;
 
 public class App extends Application {

@@ -1,7 +1,7 @@
 package pfvisualizer.ui;
 
 import javafx.concurrent.Task;
-import pfvisualizer.util.ScenarioRunner;
+import pfvisualizer.benchmark.ScenarioRunner;
 
 public class BenchmarkTask extends Task<Void> {
   ScenarioRunner runner;

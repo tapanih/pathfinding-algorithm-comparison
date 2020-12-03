@@ -7,8 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import pfvisualizer.util.Scenario;
-import pfvisualizer.util.ScenarioRunner;
+import pfvisualizer.benchmark.Scenario;
+import pfvisualizer.benchmark.ScenarioRunner;
 
 
 
