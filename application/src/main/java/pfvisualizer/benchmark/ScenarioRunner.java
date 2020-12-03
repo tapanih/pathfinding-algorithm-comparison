@@ -48,16 +48,16 @@ public class ScenarioRunner {
 
   private void runScenariosWith(Pathfinder algorithm, String algorithmName,
                                 BenchmarkResults results) {
-    XYChart.Series<Number, Number> series = new XYChart.Series<>();
-    series.setName(algorithmName);
+    double[][] data = new double[2][scenarios.length];
     double total = 0;
     for (int i = 0; i < scenarios.length; i++) {
       double result = runScenarioWith(algorithm, scenarios[i]);
       total += result;
-      series.getData().add(new XYChart.Data<>(scenarios[i].getExpectedDistance(), result));
+      data[0][i] = scenarios[i].getExpectedDistance();
+      data[1][i] = result;
       io.print("Benchmarking " + algorithmName + "... [" + i + "/" + scenarios.length + "]");
     }
-    results.getSeriesList().add(series);
+    results.getData().add(data);
     results.getTotals().add(total);
   }
 

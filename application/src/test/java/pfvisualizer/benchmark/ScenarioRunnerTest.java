@@ -22,9 +22,9 @@ public class ScenarioRunnerTest {
     Scenario[] scenarios = Parser.parseScenario(file);
     ScenarioRunner runner = new ScenarioRunner(scenarios, io, 10);
     BenchmarkResults results = runner.run();
-    assertEquals(3, results.getSeriesList().size());
-    assertEquals(4, results.getSeriesList().get(0).getData().size());
-    assertEquals(4, results.getSeriesList().get(1).getData().size());
-    assertEquals(4, results.getSeriesList().get(2).getData().size());
+    assertEquals(3, results.getData().size());
+    assertEquals(4, results.getData().get(0)[0].length);
+    assertEquals(4, results.getData().get(1)[0].length);
+    assertEquals(4, results.getData().get(2)[0].length);
   }
 }

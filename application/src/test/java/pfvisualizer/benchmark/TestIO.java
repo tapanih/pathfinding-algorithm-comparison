@@ -1,9 +1,8 @@
 package pfvisualizer.benchmark;
 
-import pfvisualizer.io.IO;
-
 import java.util.ArrayList;
 import java.util.List;
+import pfvisualizer.io.IO;
 
 public class TestIO implements IO {
   List<String> output = new ArrayList<>();
