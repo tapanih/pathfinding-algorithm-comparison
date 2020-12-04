@@ -11,6 +11,8 @@
 
 [Testing](documentation/testing.md)
 
+[User manual](documentation/user_manual.md)
+
 ### Weekly reports
 
 [Week 1](documentation/weekly_report_1.md)
@@ -22,3 +24,5 @@
 [Week 4](documentation/weekly_report_4.md)
 
 [Week 5](documentation/weekly_report_5.md)
+
+[Week 6](documentation/weekly_report_6.md)

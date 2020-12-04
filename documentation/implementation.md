@@ -1,6 +1,15 @@
 ## Implementation
 
-The program is a JavaFX application that visualizes pathfinding algorithms and
+The program is divided into 6 packages
+
+* `pfvisualizer.algorithms` contains the pathfinding algorithms and the interface that they share
+* `pfvisualizer.benchmark` contains classes that define scenarios, how to run scenarios  and what are included in the benchmark results
+* `pfvisualizer.data` contains the data structures of which there are only the binary heap and its interface
+* `pfvisualizer.io` contains the map and scenario parsers and an interface for printing results to the user
+* `pfvisualizer.ui` contains the main class and UI components
+* `pfvisualizer.util` contains utility classes
+
+The program is a JavaFX application that visualizes path-finding algorithms and
 can be used to run benchmarks on them. Inside the application, users can open
 map and scenario files in Moving AI Labs file format. Opened maps are drawn on the screen and users can click twice to place start and end points. After setting the points, the program visualizes the selected path-finding algorithm by showing the path, visited and unvisited nodes.
 
@@ -14,11 +23,11 @@ The algorithms store data that is bounded by the number of vertices so the space
 
 ## Performance analysis
 
-In initial testing A* algorithm runs 1.5 times faster than Dijkstra. Jump Point Search seems to run 2 times faster than A* algorithm.
+Dijkstra is the slowest algorithm with the exception of maze maps where A* algorithm seems to perform worse. JPS is clearly the fastest on all tested maps. More about performance testing can be found on the [testing document](testing.md).
 
 ## Flaws and improvements
 
-The benchmarking utility is still in progress.
+The biggest bottlenecks in algorithms have not been identified and different heuristic functions could be tested more.
 
 ## Sources
 
