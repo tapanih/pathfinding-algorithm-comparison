@@ -7,7 +7,8 @@ Download ``pathfinding-visualizer.jar`` from [here](https://github.com/tapanih/p
 ```
 java -jar pathfinding-visualizer.jar
 ```
-from the folder the program was downloaded to.
+from the folder the program was downloaded to. The program uses map and
+scenario files that can be downloaded from https://movingai.com/benchmarks/grids.html
 
 ### Visualizing algorithms
 
