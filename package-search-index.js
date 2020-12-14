@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"pfvisualizer.algorithms"},{"l":"pfvisualizer.benchmark"},{"l":"pfvisualizer.data"},{"l":"pfvisualizer.io"},{"l":"pfvisualizer.ui"},{"l":"pfvisualizer.util"}]
