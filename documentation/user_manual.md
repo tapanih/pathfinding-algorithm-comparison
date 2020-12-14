@@ -2,7 +2,7 @@
 
 ## Running the program
 
-Download ``pathfinding-visualizer.jar`` from here. The program can be run with command
+Download ``pathfinding-visualizer.jar`` from [here](https://github.com/tapanih/pathfinding-visualizer/releases/download/1.0/pathfinding-visualizer.jar). The program can be run with command
 
 ```
 java -jar pathfinding-visualizer.jar
