@@ -13,6 +13,8 @@
 
 [User manual](documentation/user_manual.md)
 
+[Javadoc](https://tapanih.github.io/pathfinding-visualizer/)
+
 ### Weekly reports
 
 [Week 1](documentation/weekly_report_1.md)

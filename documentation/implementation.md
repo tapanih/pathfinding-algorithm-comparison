@@ -13,7 +13,9 @@ The program is a JavaFX application that visualizes path-finding algorithms and
 can be used to run benchmarks on them. Inside the application, users can open
 map and scenario files in Moving AI Labs file format. Opened maps are drawn on the screen and users can click twice to place start and end points. After setting the points, the program visualizes the selected path-finding algorithm by showing the path, visited and unvisited nodes.
 
-The program supports three path-finding algorithms: Dijkstra, A* and Jump Point Search. The algorithms operates on 8-connected grid maps with a diagonal cost of sqrt(2). Also no corner cutting is allowed when moving diagonally. This makes the program compatible with Moving AI Labs benchmarks. 
+The program supports three path-finding algorithms: Dijkstra, A* and Jump Point Search. The algorithms operates on 8-connected grid maps with a diagonal cost of sqrt(2). Also no corner cutting is allowed when moving diagonally. This makes the program compatible with Moving AI Labs benchmarks.
+
+Javadocs are available [here](https://tapanih.github.io/pathfinding-visualizer/).
 
 ## Time and space complexities
 
