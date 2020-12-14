@@ -51,6 +51,8 @@ public class Parser {
 
   /**
    * Parses the scenario file given as the argument.
+   *
+   * @param file the scenario file
    */
   public static Scenario[] parseScenario(File file) throws IOException {
     HashMap<String, int[][]> fileNameToMap = new HashMap<>();

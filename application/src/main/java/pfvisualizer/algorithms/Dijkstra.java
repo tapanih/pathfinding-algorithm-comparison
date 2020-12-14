@@ -9,6 +9,9 @@ import pfvisualizer.data.Heap;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
+/**
+ * Dijkstra's algorithm.
+ */
 public class Dijkstra implements Pathfinder {
   protected int height;
   protected int width;
@@ -18,6 +21,15 @@ public class Dijkstra implements Pathfinder {
   protected int[][] directions = {{-1, -1},  {1, -1}, {-1, 1}, {1, 1},
                                   {0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 
+
+  /**
+   * Calculates the heuristic value which is an estimated distance between
+   * the given node and the end node.
+   *
+   * @param node start node
+   * @param end end node
+   * @return the heuristic value
+   */
   protected float heuristic(Node node, Node end) {
     return 0;
   }
@@ -68,7 +80,9 @@ public class Dijkstra implements Pathfinder {
   /**
    * Calculates the distance between two nodes.
    *
-   * @return distance between nodes
+   * @param first first node
+   * @param second second node
+   * @return distance between the given nodes
    */
   protected float getDistanceBetween(Node first, Node second) {
     if (first.getCol() != second.getCol() && first.getRow() != second.getRow()) {
@@ -79,6 +93,9 @@ public class Dijkstra implements Pathfinder {
 
   /**
    * Returns a list of nodes that can be moved into from the given parent node.
+   *
+   * @param node the parent node
+   * @return list of nodes that can be moved into from the parent node
    */
   protected Node[] getSuccessors(Node node) {
     int row = node.getRow();
@@ -105,6 +122,14 @@ public class Dijkstra implements Pathfinder {
     return arrayCopyOf(neighbors, i);
   }
 
+
+  /**
+   * Checks if the given node is blocked (i.e wall).
+   *
+   * @param row row coordinate of the node
+   * @param col column coordinate of the node
+   * @return a boolean representing whether the node is blocked or not
+   */
   protected boolean isBlocked(int row, int col) {
     // check boundaries
     if (row < 0 || row >= height || col < 0 || col >= width) {

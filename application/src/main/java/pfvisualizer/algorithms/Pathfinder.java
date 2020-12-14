@@ -3,6 +3,9 @@ package pfvisualizer.algorithms;
 import pfvisualizer.util.Node;
 import pfvisualizer.util.Result;
 
+/**
+ * An interface for path-finding algorithms.
+ */
 public interface Pathfinder {
   int UNVISITED = 0;
   int WALL = 1;
@@ -12,6 +15,18 @@ public interface Pathfinder {
   float STRAIGHT_DISTANCE = 1;
   float DIAGONAL_DISTANCE = 1.41421356237f; // sqrt(2)
 
+
+  /**
+   * Performs a search for a path from given starting coordinates to the given end coordinates
+   * on the given grid.
+   *
+   * @param grid map to perform the search on
+   * @param startCol start column
+   * @param startRow start row
+   * @param endCol end column
+   * @param endRow  end row
+   * @return Result object which contains information such as the length of the optimal path
+   */
   Result search(int[][] grid, int startCol, int startRow, int endCol, int endRow);
 
   /**

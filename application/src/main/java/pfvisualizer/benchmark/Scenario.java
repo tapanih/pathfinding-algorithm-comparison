@@ -12,6 +12,13 @@ public class Scenario {
 
   /**
    * Represents a scenario for performance testing.
+   *
+   * @param map the map for the scenario
+   * @param startCol the column coordinate of the start node
+   * @param startRow the row coordinate of the start node
+   * @param endCol the column coordinate of the end node
+   * @param endRow the row coordinate of the end node
+   * @param expectedDistance the expected distance of the path between start and end nodes
    */
   public Scenario(int[][] map, int startCol, int startRow, int endCol,
                   int endRow, float expectedDistance) {
@@ -23,26 +30,56 @@ public class Scenario {
     this.expectedDistance = expectedDistance;
   }
 
+  /**
+   * Returns the map of this scenario.
+   *
+   * @return the map of this scenario
+   */
   public int[][] getMap() {
     return map;
   }
 
+  /**
+   * Returns the row coordinate of the start node of this scenario.
+   *
+   * @return the row coordinate of the start node
+   */
   public int getStartRow() {
     return startRow;
   }
 
+  /**
+   * Returns the column coordinate of the start node of this scenario.
+   *
+   * @return the column coordinate of the start node
+   */
   public int getStartCol() {
     return startCol;
   }
 
+  /**
+   * Returns the row coordinate of the end node of this scenario.
+   *
+   * @return the row coordinate of the end node
+   */
   public int getEndRow() {
     return endRow;
   }
 
+  /**
+   * Returns the column coordinate of the end node of this scenario.
+   *
+   * @return the column coordinate of the end node
+   */
   public int getEndCol() {
     return endCol;
   }
 
+  /**
+   * Returns the expected distance between the start and end nodes of this scenario.
+   *
+   * @return the expected distance between the start and end nodes of this scenario
+   */
   public float getExpectedDistance() {
     return expectedDistance;
   }

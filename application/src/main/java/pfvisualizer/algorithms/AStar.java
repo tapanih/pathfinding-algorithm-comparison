@@ -2,6 +2,9 @@ package pfvisualizer.algorithms;
 
 import pfvisualizer.util.Node;
 
+/**
+ * A* algorithm.
+ */
 public class AStar extends Dijkstra {
 
   @Override

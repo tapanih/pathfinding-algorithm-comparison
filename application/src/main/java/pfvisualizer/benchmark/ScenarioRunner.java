@@ -9,6 +9,9 @@ import pfvisualizer.algorithms.Pathfinder;
 import pfvisualizer.io.IO;
 import pfvisualizer.util.Result;
 
+/**
+ * A class for performing benchmarks using scenarios.
+ */
 public class ScenarioRunner {
   private final IO io;
   private final Pathfinder dijkstra = new Dijkstra();
@@ -46,6 +49,14 @@ public class ScenarioRunner {
     return results;
   }
 
+
+  /**
+   * Runs a benchmark with the given algorithm.
+   *
+   * @param algorithm the path-finding algorithm used
+   * @param algorithmName the name of the algorithm
+   * @param results the results object to update
+   */
   private void runScenariosWith(Pathfinder algorithm, String algorithmName,
                                 BenchmarkResults results) {
     double[][] data = new double[2][scenarios.length];
@@ -61,6 +72,13 @@ public class ScenarioRunner {
     results.getTotals().add(total);
   }
 
+  /**
+   * Runs a scenario with the given algorithm.
+   *
+   * @param algorithm the path-finding algorithm used
+   * @param scenario the scenario used
+   * @return the median running time (ms) of n iterations of the algorithm on the given scenario
+   */
   private double runScenarioWith(Pathfinder algorithm, Scenario scenario) {
     algorithm.search(scenario.getMap(), scenario.getStartCol(), scenario.getStartRow(),
         scenario.getEndCol(), scenario.getEndRow());

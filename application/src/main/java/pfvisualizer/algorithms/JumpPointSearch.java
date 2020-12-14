@@ -4,6 +4,9 @@ import static pfvisualizer.util.Utils.arrayCopyOf;
 
 import pfvisualizer.util.Node;
 
+/**
+ * Jump Point Search algorithm.
+ */
 public class JumpPointSearch extends AStar {
 
   @Override
@@ -20,6 +23,11 @@ public class JumpPointSearch extends AStar {
   /**
    * Draws a line using Bresenham's line algorithm.
    * https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+   *
+   * @param x0 row of the first node
+   * @param y0 column of the first node
+   * @param x1 row of the second node
+   * @param y1 column of the second node
    */
   private void drawLine(int x0, int y0, int x1, int y1) {
     int dx = (x1 > x0) ? x1 - x0 : x0 - x1;
