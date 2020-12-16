@@ -17,6 +17,31 @@ The program supports three path-finding algorithms: Dijkstra, A* and Jump Point 
 
 Javadocs are available [here](https://tapanih.github.io/pathfinding-visualizer/).
 
+## Algorithms
+
+### Dijkstra's algorithm
+
+Dijkstra's algorithm works in the following way:
+
+1. Copy the map to a new array.
+2. Create an array for distance values and initialize it to infinity. Set
+distance of start node to 0. Add the start node to the heap.
+3. Extract the minimum node from the heap. The minimum node has the shortest distance to the start node.
+4. For the extracted node, go through all the unvisited and unblocked neighbours.
+5. If the neighbour is the end node, we are done. Draw the path to the map and return the results.
+6. Else calculate the distance to the start node through the parent node. If it is shorter than the current distance, then update the distance and add the neighbour to the heap.
+7. After all neighbours have been processed, go back to step 3. If the heap is empty then there is no possible path.
+
+This is the search function that is also used by other algorithms.
+
+### A* algorithm
+
+A* algorithm uses the same search function as Dijkstra. The only difference is that the nodes in the heap are sorted based on the sum of distance and a heuristic. The heuristic is an octile distance from current node to end node. Octile distance is an optimal combination of diagonal and straight moves between nodes.
+
+### Jump Point Search
+
+Jump Point Search works like A* algorithm but also prunes neighbours based on a few rules so they are not processed further.
+
 ## Time and space complexities
 
 Dijkstra's algorithm implemented with a binary heap runs in time O((|E|+|V|)log|V|). In this application, the number of edges has an upper bound of 8 so the time complexity can equivalently be expressed as O(|V|log|V|). The other algorithms are based on Dijkstra's so they have the same time complexity.

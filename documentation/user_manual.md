@@ -10,17 +10,16 @@ java -jar pathfinding-visualizer.jar
 from the folder the program was downloaded to. The program uses map and
 scenario files that can be downloaded from https://movingai.com/benchmarks/grids.html
 
-### Visualizing algorithms
+## Visualizing algorithms
 
 Open a map file with ``Open map...``
 
 Click twice on the map to set start and end points. Make sure the start point is not inside a wall. Different algorithms can be selected from the side bar.
 
-The colors used in the visualization are explained in the side bar. The nodes
-that are visited but not added to the heap are unique to Jump Point Search.
-Those nodes should be processed quicker than normal.
+The colors used in the visualization are explained in the side bar. Impassable nodes are black, passable and unvisited nodes are white,
+visited nodes are dark or light green depending on whether they have been added to the heap. The nodes that are visited but not added to the heap are unique to Jump Point Search. Those nodes should have been processed faster than normal. Finally the nodes along the path are marked red.
 
-### Benchmarking using scenario files
+## Benchmarking using scenario files
 
 Open a scenario file with ``Open scenario..`` 
 
