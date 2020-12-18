@@ -32,7 +32,7 @@ distance of start node to 0. Add the start node to the heap.
 6. Else calculate the distance to the start node through the parent node. If it is shorter than the current distance, then update the distance and add the neighbour to the heap.
 7. After all neighbours have been processed, go back to step 3. If the heap is empty then there is no possible path.
 
-This is the search function that is also used by other algorithms.
+This is a search function that is also used by other algorithms.
 
 ### A* algorithm
 
@@ -40,7 +40,7 @@ A* algorithm uses the same search function as Dijkstra. The only difference is t
 
 ### Jump Point Search
 
-Jump Point Search works like A* algorithm but also prunes neighbours based on a few rules so they are not processed further.
+Jump Point Search works like A* algorithm but also prunes neighbours based on a few rules so they are not processed further. First the neighbours that are more or just as easily accessible from the parent node are removed from consideration. For the remaining neighbours, the algorithm looks if a longer jump in the direction of these neighbours is possible.
 
 ## Time and space complexities
 
@@ -54,7 +54,7 @@ Dijkstra is the slowest algorithm with the exception of maze maps where A* algor
 
 ## Flaws and improvements
 
-The biggest bottlenecks in algorithms have not been identified and different heuristic functions could be tested more.
+The biggest bottlenecks in algorithms have not been identified and different heuristic functions could have been tested more.
 
 ## Sources
 
